@@ -2,7 +2,7 @@
 
 Welcome to the repository of my personal portfolio website! This project is a modern, high-performance, and fully responsive web application built to showcase my skills, projects, and professional journey as a Software Engineer and AI Enthusiast.
 
-🌐 **Live Demo:** [iannnub.com](https://iannnub.com) *(Update this link to your Vercel URL)*
+🌐 **Live Demo:** [porto-iannnub.vercel.app](https://porto-iannnub.vercel.app/)
 
 ---
 
