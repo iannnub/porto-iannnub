@@ -22,10 +22,11 @@ export const profileData: Profile = {
     education: 'Information Systems'
   },
   socials: {
-    linkedin: 'https://linkedin.com/in/septianputrarachmanhakim',
+    linkedin: 'https://www.linkedin.com/in/iannnub/',
     github: 'https://github.com/iannnub',
-    email: 'iannnub@example.com',
+    email: 'mlayusek@gmail.com',
     phone: null,
-    resume: null
+    resume: null,
+    instagram: 'https://www.instagram.com/iannnub/'
   }
 };

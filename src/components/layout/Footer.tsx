@@ -1,4 +1,4 @@
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Github, Linkedin, Instagram, Mail } from 'lucide-react';
 import { profileData } from '@/data/profile';
 
 export function Footer() {
@@ -18,13 +18,27 @@ export function Footer() {
         
         <div className="flex items-center gap-6">
           {profileData.socials.linkedin && (
-            <a href={profileData.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-accent-blue transition-colors">
-              LinkedIn
+            <a href={profileData.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-accent-blue transition-colors flex items-center gap-2 group" aria-label="LinkedIn">
+              <Linkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <span className="hidden md:inline">LinkedIn</span>
             </a>
           )}
           {profileData.socials.github && (
-            <a href={profileData.socials.github} target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-accent-blue transition-colors">
-              GitHub
+            <a href={profileData.socials.github} target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-accent-red transition-colors flex items-center gap-2 group" aria-label="GitHub">
+              <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <span className="hidden md:inline">GitHub</span>
+            </a>
+          )}
+          {profileData.socials.instagram && (
+            <a href={profileData.socials.instagram} target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-pink-500 transition-colors flex items-center gap-2 group" aria-label="Instagram">
+              <Instagram className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <span className="hidden md:inline">Instagram</span>
+            </a>
+          )}
+          {profileData.socials.email && (
+            <a href={`mailto:${profileData.socials.email}`} className="text-secondary hover:text-accent-blue transition-colors flex items-center gap-2 group" aria-label="Email">
+              <Mail className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <span className="hidden md:inline">Email</span>
             </a>
           )}
         </div>
