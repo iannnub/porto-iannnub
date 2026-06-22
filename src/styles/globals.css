@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-base: #0A0A0F;
+    --bg-elevated: #15151E;
+    --bg-elevated-2: #1E1E2B;
+    --text-primary: #F5F5F7;
+    --text-secondary: #A1A1B0;
+    --accent-red: #E0282E;
+    --accent-blue: #2D6CDF;
+    --accent-blue-glow: #5B9CFF;
+    --accent-line: #2A2A3A;
+    --success: #4ADE80;
+    --error: #F87171;
+  }
+  
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+  }
+}
