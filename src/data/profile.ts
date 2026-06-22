@@ -4,21 +4,21 @@ export const profileData: Profile = {
   name: 'Septian Putra Rachman Hakim',
   pronouns: 'He/Him',
   headline: [
-    'Customer Support Specialist',
-    'Technical Support Consultant',
-    'AI & Web Builder'
+    'Software Engineer',
+    'Operations Specialist',
+    'AI Enthusiast'
   ],
   location: 'Jember, East Java, Indonesia',
   about: [
-    'Versatile Technical Support and Operations Specialist with 5+ years of hands-on experience managing digital business environments and customer-facing roles. Supported high-volume daily operations, managed complex transaction workflows, and maintained structured records for 100% accuracy in fast-paced environments. Experience spans live chat support to resolving Level 1 and 2 technical issues.',
-    'Solid technical foundation in Information Systems, bridging back-end infrastructure and non-technical end-users — built Management Information Systems (MIS) for project tracking at PT Antosa Arsitek and a drug inventory system for a public health institution (Puskesmas Wuluhan). Managed end-to-end billing lifecycles, including developing and integrating the Midtrans payment gateway for an independent e-commerce platform, "Javapedia," with HTML/CSS troubleshooting.',
-    'Led AI-integrated projects such as "JemberTrip" (RAG + recommendation systems for local tourism). Served as Head of Human Resources Development (PSDM) at HIMAFORSI, mentoring juniors in programming and calculus.',
-    'Proactive, organized, detail-driven; thrives in high-intensity, global, or remote environments. C1-level English proficiency; deep interest in Blockchain and AI-driven automation.'
+    'A dedicated and adaptable professional with over 5 years of hands-on experience in managing digital environments, operations, and user-centric roles. I thrive in fast-paced environments, ensuring high accuracy, seamless workflows, and excellent overall satisfaction.',
+    'With a solid technical foundation in Information Systems, I easily bridge the gap between complex back-end infrastructure and end-users. I have successfully built and managed various digital solutions, from project tracking systems to full e-commerce payment integrations.',
+    'Passionate about emerging technologies, I have led innovative projects integrating Artificial Intelligence (AI) and smart recommendation systems. I also enjoy mentoring others and actively contributing to collaborative team growth.',
+    'Proactive, highly organized, and detail-driven. I am comfortable working in high-intensity, global, or remote environments, always eager to explore new technologies and build impactful, scalable solutions.'
   ],
   stats: {
-    experience: '5+ yrs experience',
+    experience: '5+ years experience',
     location: 'Jember, Indonesia',
-    languages: 'ID / EN (C1)',
+    languages: 'ID / EN',
     education: 'Information Systems'
   },
   socials: {
