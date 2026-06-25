@@ -2,6 +2,11 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useState } from 'react';
 
+const baseBoxGeo = new THREE.BoxGeometry(1, 1, 1);
+const edgesGeo = new THREE.EdgesGeometry(baseBoxGeo);
+const boxMaterial = new THREE.MeshBasicMaterial({ color: "#050508" });
+const lineMaterial = new THREE.LineBasicMaterial({ color: "#E0282E", transparent: true, opacity: 0.3 });
+
 function CitySilhouettes() {
   const [buildings] = useState(() => {
     const list = [];
@@ -19,13 +24,8 @@ function CitySilhouettes() {
   return (
     <group>
       {buildings.map((b, i) => (
-        <mesh key={i} position={b.position} scale={b.scale}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshBasicMaterial color="#050508" />
-          <lineSegments>
-            <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
-            <lineBasicMaterial color="#E0282E" transparent opacity={0.3} />
-          </lineSegments>
+        <mesh key={i} position={b.position} scale={b.scale} geometry={baseBoxGeo} material={boxMaterial}>
+          <lineSegments geometry={edgesGeo} material={lineMaterial} />
         </mesh>
       ))}
     </group>

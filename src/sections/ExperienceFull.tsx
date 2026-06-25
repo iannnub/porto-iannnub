@@ -22,17 +22,16 @@ export function ExperienceFull({ data = experienceData }: { data?: Experience[] 
       const track = trackRef.current;
       if (!track) return;
       
-      const amountToScroll = track.scrollWidth - window.innerWidth + 300; 
-      
       const tween = gsap.to(track, {
-        x: -amountToScroll,
+        x: () => -(track!.scrollWidth - window.innerWidth + 300),
         ease: "none",
         scrollTrigger: {
           trigger: containerRef.current,
           pin: true,
           scrub: 1,
           start: "top top",
-          end: `+=${amountToScroll}`,
+          end: () => `+=${track!.scrollWidth - window.innerWidth + 300}`,
+          invalidateOnRefresh: true,
           onUpdate: (self) => {
             progressRef.current = self.progress;
           }

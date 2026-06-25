@@ -102,6 +102,8 @@ export function Hero() {
             <motion.img 
               src="/spiderman.png" 
               alt="Spiderman Swinging" 
+              width={320}
+              height={320}
               className="w-48 md:w-80 object-contain drop-shadow-[0_20px_20px_rgba(224,40,46,0.6)] relative z-10"
               style={{ marginTop: 'calc(40vh - 20px)', marginLeft: '-20px' }}
               animate={{ 

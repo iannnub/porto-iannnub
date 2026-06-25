@@ -4,6 +4,9 @@ import { Text, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import { skillsData } from '@/data/skills';
 
+const coreGeo = new THREE.OctahedronGeometry(0.5, 0);
+const coreMat = new THREE.MeshStandardMaterial({ color: "#E0282E", emissive: "#E0282E", emissiveIntensity: 1, wireframe: true });
+
 function CoreNode() {
   const meshRef = useRef<THREE.Mesh>(null);
   
@@ -17,12 +20,11 @@ function CoreNode() {
   });
 
   return (
-    <mesh ref={meshRef}>
-      <octahedronGeometry args={[0.5, 0]} />
-      <meshStandardMaterial color="#E0282E" emissive="#E0282E" emissiveIntensity={1} wireframe />
-    </mesh>
+    <mesh ref={meshRef} geometry={coreGeo} material={coreMat} />
   );
 }
+
+const skillSphereGeo = new THREE.SphereGeometry(0.2, 8, 8);
 
 function SkillNode({ position, label, color }: { position: [number, number, number], label: string, color: string }) {
   const [hovered, setHovered] = useState(false);
@@ -47,10 +49,10 @@ function SkillNode({ position, label, color }: { position: [number, number, numb
       />
       <mesh
         ref={nodeRef}
+        geometry={skillSphereGeo}
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
         onPointerOut={(e) => { e.stopPropagation(); setHovered(false); document.body.style.cursor = 'auto'; }}
       >
-        <sphereGeometry args={[0.2, 8, 8]} />
         <meshStandardMaterial color={hovered ? "#E0282E" : color} emissive={hovered ? "#E0282E" : color} emissiveIntensity={hovered ? 1 : 0.5} />
       </mesh>
       {hovered && (
