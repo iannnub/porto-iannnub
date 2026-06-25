@@ -1,4 +1,5 @@
-import { ArrowUp, Github, Linkedin, Instagram, Mail } from 'lucide-react';
+import { ArrowUp, Mail } from 'lucide-react';
+import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { profileData } from '@/data/profile';
 
 export function Footer() {
@@ -19,19 +20,19 @@ export function Footer() {
         <div className="flex items-center gap-6">
           {profileData.socials.linkedin && (
             <a href={profileData.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-accent-blue transition-colors flex items-center gap-2 group" aria-label="LinkedIn">
-              <Linkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <FaLinkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
               <span className="hidden md:inline">LinkedIn</span>
             </a>
           )}
           {profileData.socials.github && (
             <a href={profileData.socials.github} target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-accent-red transition-colors flex items-center gap-2 group" aria-label="GitHub">
-              <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <FaGithub className="w-5 h-5 group-hover:scale-110 transition-transform" />
               <span className="hidden md:inline">GitHub</span>
             </a>
           )}
           {profileData.socials.instagram && (
             <a href={profileData.socials.instagram} target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-pink-500 transition-colors flex items-center gap-2 group" aria-label="Instagram">
-              <Instagram className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <FaInstagram className="w-5 h-5 group-hover:scale-110 transition-transform" />
               <span className="hidden md:inline">Instagram</span>
             </a>
           )}

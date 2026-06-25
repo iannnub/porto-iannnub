@@ -7,21 +7,17 @@ import { ExperienceJourney } from './sections/ExperienceJourney';
 import { Projects } from './sections/Projects';
 import { Certifications } from './sections/Certifications';
 import { Contact } from './sections/Contact';
-import { CustomCursor } from './components/ui/CustomCursor';
 import { IntroLoader } from './components/layout/IntroLoader';
 
 function App() {
   return (
-    <div className="min-h-screen bg-base flex flex-col relative overflow-x-hidden cursor-none md:cursor-auto">
+    <div className="min-h-screen bg-base flex flex-col relative overflow-x-hidden">
       {/* Premium Background Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-accent-blue/5 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[30vw] h-[30vw] rounded-full bg-accent-red/5 blur-[120px] animate-[pulse_10s_ease-in-out_infinite_reverse]" />
       </div>
 
-      <div className="hidden md:block z-[9999]">
-        <CustomCursor />
-      </div>
       <IntroLoader />
       <Navbar />
       
