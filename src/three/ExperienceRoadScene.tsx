@@ -10,9 +10,9 @@ const lineMaterial = new THREE.LineBasicMaterial({ color: "#E0282E", transparent
 function CitySilhouettes() {
   const [buildings] = useState(() => {
     const list = [];
-    for (let i = 0; i < 50; i++) {
-      const z = -(i * 2) - 5; // Spread along Z
-      const x = (i % 2 === 0 ? 1 : -1) * (3 + Math.random() * 5); // Left and right
+    for (let i = 0; i < 30; i++) {
+      const z = -(i * 3) - 5;
+      const x = (i % 2 === 0 ? 1 : -1) * (3 + Math.random() * 5);
       const w = 1 + Math.random() * 2;
       const h = 2 + Math.random() * 15;
       const d = 1 + Math.random() * 2;
@@ -32,30 +32,28 @@ function CitySilhouettes() {
   );
 }
 
+// Pre-allocate reusable objects to avoid GC pressure in the render loop
+const _lerpTarget = new THREE.Vector3();
+const _lookAtTarget = new THREE.Vector3();
+const _dummyObj = new THREE.Object3D();
+
 function PathCamera({ progressRef }: { progressRef: React.MutableRefObject<number> }) {
   useFrame(({ camera }) => {
-    const p = progressRef.current; // 0 to 1
-    // Parabolic swing arc motion
-    // Start at z=0, go deep into z=-100
+    const p = progressRef.current;
     const targetZ = p * -100;
-    // Swing x back and forth
     const targetX = Math.sin(p * Math.PI * 4) * 2;
-    // Slight y bump
     const targetY = 2 + Math.sin(p * Math.PI * 2) * 1;
     
-    // Lerp for smooth camera movement
-    camera.position.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.1);
+    _lerpTarget.set(targetX, targetY, targetZ);
+    camera.position.lerp(_lerpTarget, 0.1);
     
-    // Look slightly ahead on the path
     const lookAheadZ = targetZ - 10;
     const lookAheadX = Math.sin((p + 0.05) * Math.PI * 4) * 2;
     
-    const targetLookAt = new THREE.Vector3(lookAheadX, 2, lookAheadZ);
-    // Create a dummy object to lerp the lookAt
-    const dummy = new THREE.Object3D();
-    dummy.position.copy(camera.position);
-    dummy.lookAt(targetLookAt);
-    camera.quaternion.slerp(dummy.quaternion, 0.1);
+    _lookAtTarget.set(lookAheadX, 2, lookAheadZ);
+    _dummyObj.position.copy(camera.position);
+    _dummyObj.lookAt(_lookAtTarget);
+    camera.quaternion.slerp(_dummyObj.quaternion, 0.1);
   });
   
   return null;
@@ -64,8 +62,8 @@ function PathCamera({ progressRef }: { progressRef: React.MutableRefObject<numbe
 export default function ExperienceRoadScene({ progressRef }: { progressRef: React.MutableRefObject<number> }) {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none">
-      <Canvas camera={{ position: [0, 2, 0], fov: 60 }} gl={{ antialias: true, alpha: true }}>
-        <fog attach="fog" args={['#0A0A0F', 5, 30]} />
+      <Canvas camera={{ position: [0, 2, 0], fov: 60 }} gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}>
+        <fog attach="fog" args={['#0A0A0F', 5, 25]} />
         <ambientLight intensity={0.5} />
         <pointLight position={[0, 5, 0]} intensity={2} color="#2D6CDF" distance={20} />
         

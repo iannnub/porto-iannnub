@@ -82,7 +82,7 @@ export function Hero() {
         <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
           {/* Static Background Effect */}
           <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #5B9CFF 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-tr from-accent-red to-accent-blue blur-[100px] opacity-20" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-tr from-accent-red to-accent-blue blur-[80px] opacity-20" />
           
           {/* Spiderman Animation */}
           <motion.div 
@@ -93,26 +93,21 @@ export function Hero() {
             }}
             transition={{ 
               rotate: { repeat: Infinity, duration: 4.5, ease: "easeInOut" },
-              y: { repeat: Infinity, duration: 2.25, ease: "easeInOut" } // Bounces twice per full swing
+              y: { repeat: Infinity, duration: 2.25, ease: "easeInOut" }
             }}
           >
             {/* The web line */}
             <div className="absolute top-0 left-[50%] w-[1px] h-[40vh] bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
             
-            <motion.img 
+            <img 
               src="/spiderman.png" 
               alt="Spiderman Swinging" 
               width={320}
               height={320}
               fetchPriority="high"
               decoding="async"
-              className="w-48 md:w-80 object-contain drop-shadow-[0_20px_20px_rgba(224,40,46,0.6)] relative z-10"
-              style={{ marginTop: 'calc(40vh - 20px)', marginLeft: '-20px' }}
-              animate={{ 
-                rotate: [0, 5, -5, 0], 
-                scale: [1, 1.05, 1] 
-              }}
-              transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+              className="w-48 md:w-80 object-contain relative z-10"
+              style={{ marginTop: 'calc(40vh - 20px)', marginLeft: '-20px', filter: 'drop-shadow(0 20px 20px rgba(224,40,46,0.4))' }}
             />
           </motion.div>
         </div>
