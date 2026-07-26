@@ -60,7 +60,7 @@ export function Navbar() {
               </li>
             ))}
           </ul>
-          <Button variant="primary" size="sm" onClick={() => window.open('#', '_blank')}>
+          <Button variant="primary" size="sm" onClick={() => window.open('/assets/cv/CV UMUM.pdf', '_blank')}>
             Download CV
           </Button>
         </nav>
@@ -92,7 +92,7 @@ export function Navbar() {
                 {link.name}
               </a>
             ))}
-            <Button variant="primary" size="md" className="mt-4 w-full" onClick={() => window.open('#', '_blank')}>
+            <Button variant="primary" size="md" className="mt-4 w-full" onClick={() => window.open('/assets/cv/CV UMUM.pdf', '_blank')}>
               Download CV
             </Button>
           </nav>
