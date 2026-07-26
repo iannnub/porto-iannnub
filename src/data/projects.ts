@@ -11,9 +11,9 @@ export const projectsData: Project[] = [
     liveUrl: 'https://jembertrip.vercel.app/',
     tags: [],
     images: [
+      '/projects/jembertrip/3.png',
       '/projects/jembertrip/1.png',
       '/projects/jembertrip/2.png',
-      '/projects/jembertrip/3.png',
       '/projects/jembertrip/4.png'
     ]
   },
