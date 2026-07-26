@@ -68,9 +68,11 @@ export function Projects() {
                     {project.images && project.images.length > 0 && (
                       <button
                         onClick={() => setActiveGalleryProject(project)}
-                        className="flex items-center gap-2 text-sm font-medium transition-all px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-accent-blue/50 text-secondary hover:text-white hover:shadow-[0_0_10px_rgba(45,108,223,0.3)] ml-auto group"
+                        className="relative flex items-center gap-2 text-sm font-bold transition-all px-4 py-2 rounded-full bg-gradient-to-r from-accent-blue/20 to-accent-blue/10 border border-accent-blue/50 text-blue-300 hover:from-accent-blue hover:to-blue-600 hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(45,108,223,0.6)] ml-auto group overflow-hidden"
                       >
-                        <Camera size={16} className="group-hover:scale-110 transition-transform" /> Gallery
+                        <div className="absolute inset-0 bg-accent-blue/10 animate-pulse" />
+                        <Camera size={16} className="relative z-10 group-hover:scale-110 transition-transform" /> 
+                        <span className="relative z-10">See Screenshots</span>
                       </button>
                     )}
                   </div>
