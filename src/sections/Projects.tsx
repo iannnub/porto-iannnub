@@ -1,49 +1,28 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { Project } from '@/data/types';
 import { projectsData } from '@/data/projects';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Camera } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ProjectGalleryModal } from '@/components/ui/ProjectGalleryModal';
 
 export function Projects() {
-  const [filter, setFilter] = useState<string>('All');
-
-  // Extract unique skills across all projects for the filter
-  const filters = useMemo(() => {
-    // Let's just pick top 5 most common skills for filtering, or just use predefined ones
-    return ['All', 'React', 'Node.js', 'Python', 'Tailwind CSS'];
-  }, []);
-
-  const filteredProjects = useMemo(() => {
-    if (filter === 'All') return projectsData;
-    return projectsData.filter((p) => p.skills.includes(filter));
-  }, [filter]);
+  const [activeGalleryProject, setActiveGalleryProject] = useState<Project | null>(null);
 
   return (
     <SectionWrapper id="projects">
       <SectionHeading title="Projects" subtitle="Some of my recent work" />
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        {filters.map((f) => (
-          <Button
-            key={f}
-            variant={filter === f ? 'primary' : 'outline'}
-            size="sm"
-            onClick={() => setFilter(f)}
-          >
-            {f}
-          </Button>
-        ))}
-      </div>
+
 
       {/* Grid */}
       <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <AnimatePresence>
-          {filteredProjects.map((project) => (
+          {projectsData.map((project) => (
             <motion.div
               key={project.id}
               layout
@@ -72,7 +51,7 @@ export function Projects() {
                     ))}
                   </div>
 
-                  <div className="flex gap-3 mt-auto pt-4 border-t border-accent-line">
+                  <div className="flex flex-wrap gap-3 mt-auto pt-4 border-t border-accent-line">
                     {project.liveUrl && (
                       <a
                         href={project.liveUrl}
@@ -87,6 +66,14 @@ export function Projects() {
                         <ExternalLink size={16} /> Live Demo
                       </a>
                     )}
+                    {project.images && project.images.length > 0 && (
+                      <button
+                        onClick={() => setActiveGalleryProject(project)}
+                        className="flex items-center gap-2 text-sm font-medium transition-all text-secondary hover:text-white ml-auto group"
+                      >
+                        <Camera size={16} className="group-hover:scale-110 transition-transform" /> Gallery
+                      </button>
+                    )}
                   </div>
                 </div>
               </Card>
@@ -94,6 +81,14 @@ export function Projects() {
           ))}
         </AnimatePresence>
       </motion.div>
+
+      {/* Gallery Modal */}
+      <ProjectGalleryModal
+        isOpen={!!activeGalleryProject}
+        onClose={() => setActiveGalleryProject(null)}
+        images={activeGalleryProject?.images || []}
+        title={activeGalleryProject?.title || ''}
+      />
     </SectionWrapper>
   );
 }

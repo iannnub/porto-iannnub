@@ -41,6 +41,8 @@ export interface Project {
   liveUrl?: string;
   tags?: string[];
   imagePlaceholder?: string;
+  coverImage?: string;
+  images?: string[];
 }
 
 export interface SkillCategory {
