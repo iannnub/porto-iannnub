@@ -60,9 +60,14 @@ export function Navbar() {
               </li>
             ))}
           </ul>
-          <Button variant="primary" size="sm" onClick={() => window.open('/assets/cv/CV UMUM.pdf', '_blank')}>
+          <a 
+            href="/assets/cv/CV%20UMUM.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-full font-sans font-medium transition-colors bg-accent-red text-white hover:bg-red-600 shadow-[0_0_20px_rgba(224,40,46,0.5)] px-3 py-1.5 text-sm"
+          >
             Download CV
-          </Button>
+          </a>
         </nav>
 
         {/* Mobile Menu Toggle */}
@@ -92,9 +97,14 @@ export function Navbar() {
                 {link.name}
               </a>
             ))}
-            <Button variant="primary" size="md" className="mt-4 w-full" onClick={() => window.open('/assets/cv/CV UMUM.pdf', '_blank')}>
+            <a 
+              href="/assets/cv/CV%20UMUM.pdf" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full font-sans font-medium transition-colors bg-accent-red text-white hover:bg-red-600 shadow-[0_0_20px_rgba(224,40,46,0.5)] px-4 py-2 text-base mt-4 w-full"
+            >
               Download CV
-            </Button>
+            </a>
           </nav>
         </div>
       )}
