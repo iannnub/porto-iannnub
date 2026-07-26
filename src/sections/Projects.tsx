@@ -68,7 +68,7 @@ export function Projects() {
                     {project.images && project.images.length > 0 && (
                       <button
                         onClick={() => setActiveGalleryProject(project)}
-                        className="flex items-center gap-2 text-sm font-medium transition-all text-secondary hover:text-white ml-auto group"
+                        className="flex items-center gap-2 text-sm font-medium transition-all px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-accent-blue/50 text-secondary hover:text-white hover:shadow-[0_0_10px_rgba(45,108,223,0.3)] ml-auto group"
                       >
                         <Camera size={16} className="group-hover:scale-110 transition-transform" /> Gallery
                       </button>
