@@ -59,4 +59,6 @@ export interface Certification {
   credentialId?: string;
   skills: string[];
   image?: string;
+  file?: string;
+  url?: string;
 }

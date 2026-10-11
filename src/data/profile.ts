@@ -3,30 +3,26 @@ import type { Profile } from './types';
 export const profileData: Profile = {
   name: 'Septian Putra Rachman Hakim',
   pronouns: 'He/Him',
-  headline: [
-    'Software Engineer',
-    'Operations Specialist',
-    'AI Enthusiast'
-  ],
+  headline: ['Full-Stack Developer', 'AI/ML Systems Specialist', 'Operations Specialist'],
   location: 'Jember, East Java, Indonesia',
   about: [
-    'A dedicated and adaptable professional with over 5 years of hands-on experience in managing digital environments, operations, and user-centric roles. I thrive in fast-paced environments, ensuring high accuracy, seamless workflows, and excellent overall satisfaction.',
-    'With a solid technical foundation in Information Systems, I easily bridge the gap between complex back-end infrastructure and end-users. I have successfully built and managed various digital solutions, from project tracking systems to full e-commerce payment integrations.',
-    'Passionate about emerging technologies, I have led innovative projects integrating Artificial Intelligence (AI) and smart recommendation systems. I also enjoy mentoring others and actively contributing to collaborative team growth.',
-    'Proactive, highly organized, and detail-driven. I am comfortable working in high-intensity, global, or remote environments, always eager to explore new technologies and build impactful, scalable solutions.'
+    'Information Systems graduate (S.Kom, GPA 3.88/4.00) specializing in full-stack development and applied AI/ML systems, with 5+ years of hands-on experience building production-grade web applications from database architecture to deployment.',
+    'Sole developer behind multi-tenant SaaS attendance platforms, university faculty achievement systems with custom RBAC, and AI tourism platforms combining hybrid recommendation engines with multilingual RAG chatbots (1,500+ users).',
+    'Experienced digital business founder (Javapedia) managing payment gateway integrations (Midtrans), API incident logging, and automated financial reconciliations for over 4 years.',
+    'Proficient across the modern web stack (Laravel, React, Next.js, FastAPI) and AI tooling (LangChain, ChromaDB, vector embeddings), focused on shipping reliable and scalable software.',
   ],
   stats: {
     experience: '5+ years experience',
     location: 'Jember, Indonesia',
     languages: 'ID / EN',
-    education: 'Information Systems'
+    education: 'S.Kom (GPA 3.88/4.00)',
   },
   socials: {
     linkedin: 'https://www.linkedin.com/in/iannnub/',
     github: 'https://github.com/iannnub',
-    email: 'mlayusek@gmail.com',
-    phone: null,
-    resume: null,
-    instagram: 'https://www.instagram.com/iannnub/'
-  }
+    email: 'iannnubb@gmail.com',
+    phone: '+6282132167400',
+    resume: '/assets/cv/SeptianPutraRachmanHakim_CV_Academy.pdf',
+    instagram: 'https://www.instagram.com/iannnub/',
+  },
 };

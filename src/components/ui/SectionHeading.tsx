@@ -20,11 +20,7 @@ export const SectionHeading = forwardRef<HTMLHeadingElement, SectionHeadingProps
         >
           {title}
         </h2>
-        {subtitle && (
-          <p className="font-sans text-secondary text-base md:text-lg">
-            {subtitle}
-          </p>
-        )}
+        {subtitle && <p className="font-sans text-secondary text-base md:text-lg">{subtitle}</p>}
         <div className="h-1 w-16 bg-accent-red mt-4 rounded-full shadow-[0_0_10px_rgba(224,40,46,0.5)]"></div>
       </div>
     );

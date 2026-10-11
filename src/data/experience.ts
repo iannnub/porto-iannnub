@@ -14,9 +14,9 @@ export const experienceData: Experience[] = [
       'Enabled accurate monitoring of medicine availability for daily healthcare operations',
       'Assisted staff in managing inventory data and improving record accuracy',
       'Analyzed workflow needs and translated them into functional system features',
-      'Supported system testing and refinement based on user feedback'
+      'Supported system testing and refinement based on user feedback',
     ],
-    skills: ['Problem Solving', 'Systems Analysis', 'Inventory Management', 'Information Systems']
+    skills: ['Problem Solving', 'Systems Analysis', 'Inventory Management', 'Information Systems'],
   },
   {
     id: 'pt-antosa-arsitek',
@@ -31,9 +31,9 @@ export const experienceData: Experience[] = [
       'Enabled clients to submit requests, review progress, and request design revisions',
       'Implemented project tracking, reporting, and client approval workflows',
       'Collaborated with stakeholders to translate business requirements into features',
-      'Improved project coordination and transparency'
+      'Improved project coordination and transparency',
     ],
-    skills: ['PHP', 'Web Application Development', 'Systems Analysis', 'Information Systems']
+    skills: ['PHP', 'Web Application Development', 'Systems Analysis', 'Information Systems'],
   },
   {
     id: 'rachmad-handycraft',
@@ -48,9 +48,9 @@ export const experienceData: Experience[] = [
       'Handled customer inquiries, order coordination, and follow-ups',
       'Supported strategies that increased monthly revenue to ~IDR 15–20 million',
       'Identified improvements and optimized processes',
-      'Adapted quickly to changing business/marketing strategies'
+      'Adapted quickly to changing business/marketing strategies',
     ],
-    skills: ['Customer Support', 'Digital Marketing', 'Web Management']
+    skills: ['Customer Support', 'Digital Marketing', 'Web Management'],
   },
   {
     id: 'freelance-support',
@@ -65,8 +65,8 @@ export const experienceData: Experience[] = [
       'Processed and tracked customer orders for accuracy and timeliness',
       'Handled complaints with a solution-oriented approach',
       'Maintained customer records and operational data',
-      'Adapted quickly to workload/customer-need changes'
+      'Adapted quickly to workload/customer-need changes',
     ],
-    skills: ['Customer Support', 'Live Chat Support', 'Operations Management']
-  }
+    skills: ['Customer Support', 'Live Chat Support', 'Operations Management'],
+  },
 ];

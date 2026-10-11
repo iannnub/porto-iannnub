@@ -16,8 +16,6 @@ export function Projects() {
     <SectionWrapper id="projects">
       <SectionHeading title="Projects" subtitle="Some of my recent work" />
 
-
-
       {/* Grid */}
       <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <AnimatePresence>
@@ -27,7 +25,7 @@ export function Projects() {
               layout
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: '-50px' }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ type: 'spring', stiffness: 100, damping: 12 }}
             >
@@ -37,7 +35,7 @@ export function Projects() {
                     {project.title}
                   </h3>
                 </div>
-                
+
                 <div className="p-6 flex-1 flex flex-col">
                   <p className="font-sans text-secondary mb-6 flex-1 leading-relaxed">
                     {project.description}
@@ -57,8 +55,8 @@ export function Projects() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`flex items-center gap-2 text-sm font-medium transition-all ${
-                          project.title.includes('JemberTrip') 
-                            ? 'text-accent-red hover:text-red-400 drop-shadow-[0_0_8px_rgba(224,40,46,0.6)]' 
+                          project.title.includes('JemberTrip')
+                            ? 'text-accent-red hover:text-red-400 drop-shadow-[0_0_8px_rgba(224,40,46,0.6)]'
                             : 'text-primary hover:text-accent-blue'
                         }`}
                       >
@@ -71,7 +69,10 @@ export function Projects() {
                         className="relative flex items-center gap-2 text-sm font-bold transition-all px-4 py-2 rounded-full bg-gradient-to-r from-accent-blue/20 to-accent-blue/10 border border-accent-blue/50 text-blue-300 hover:from-accent-blue hover:to-blue-600 hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(45,108,223,0.6)] ml-auto group overflow-hidden"
                       >
                         <div className="absolute inset-0 bg-accent-blue/10 animate-pulse" />
-                        <Camera size={16} className="relative z-10 group-hover:scale-110 transition-transform" /> 
+                        <Camera
+                          size={16}
+                          className="relative z-10 group-hover:scale-110 transition-transform"
+                        />
                         <span className="relative z-10">See Screenshots</span>
                       </button>
                     )}

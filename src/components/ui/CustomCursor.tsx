@@ -47,7 +47,7 @@ export function CustomCursor() {
         }}
         transition={{ type: 'tween', ease: 'backOut', duration: 0.1 }}
       />
-      
+
       {/* Trailing larger circle */}
       <motion.div
         className="fixed top-0 left-0 w-10 h-10 border border-accent-blue rounded-full pointer-events-none z-[9998] mix-blend-screen flex items-center justify-center"
@@ -60,9 +60,7 @@ export function CustomCursor() {
         }}
         transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.5 }}
       >
-        {isHovering && (
-          <div className="w-1.5 h-1.5 bg-accent-red rounded-full" />
-        )}
+        {isHovering && <div className="w-1.5 h-1.5 bg-accent-red rounded-full" />}
       </motion.div>
     </>
   );

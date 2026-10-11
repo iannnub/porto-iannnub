@@ -2,22 +2,48 @@ import type { Certification } from './types';
 
 export const certificationsData: Certification[] = [
   {
+    id: 'micro1-cert',
+    title: 'Certified by micro1 (AI Interview)',
+    issuer: 'micro1',
+    date: 'Aug 2026',
+    skills: ['Full-Stack Development', 'AI/ML Systems', 'Software Engineering'],
+    image: '/micro.jpg',
+  },
+  {
+    id: 'ibm-ai-agent',
+    title: 'Intelligent by Design: Build an AI Agent',
+    issuer: 'IBM SkillsBuild',
+    date: 'Oct 2026',
+    credentialId: 'ALM-COURSE_3946359',
+    skills: ['AI Agents', 'Prompt Engineering', 'LangChain'],
+    file: '/Completion Certificate _ SkillsBuild.pdf',
+  },
+  {
+    id: 'ibm-llm',
+    title: 'Introduction to Large Language Models',
+    issuer: 'IBM SkillsBuild',
+    date: 'Oct 2026',
+    credentialId: 'ALM-COURSE_4058915',
+    skills: ['Large Language Models', 'Artificial Intelligence (AI)'],
+    file: '/1. Completion Certificate _ SkillsBuild.pdf',
+  },
+  {
     id: 'aws-cert',
     title: 'AWS Certifications',
     issuer: 'Dicoding Academy',
     date: 'Jun 2026',
     expiry: 'Jun 2029',
     credentialId: '07Z676LJJPQR',
-    skills: ['Artificial Intelligence (AI)'],
-    image: '/dicoding.jpg'
+    skills: ['Artificial Intelligence (AI)', 'Cloud Computing'],
+    image: '/dicoding.jpg',
   },
   {
     id: 'kiro-spec',
     title: 'Spec-Driven Development dengan Kiro',
     issuer: 'Dicoding Academy',
-    date: '2026', // Add approx date
+    date: '2026',
     skills: ['AI-assisted workflow', 'Spec-Driven Development'],
-    image: '/dicoding.jpg'
+    image: '/dicoding.jpg',
   },
   {
     id: 'gcp-data',
@@ -26,22 +52,31 @@ export const certificationsData: Certification[] = [
     date: 'Jan 2026',
     expiry: 'Jan 2029',
     skills: ['Data Analysis', 'Back-End Web Development'],
-    image: '/gc.jpg'
-  },
-  {
-    id: 'dilesin-cert',
-    title: 'Dilesin Academy Certifications',
-    issuer: 'Dilesin',
-    date: 'Aug 2024',
-    skills: [],
-    image: '/dilesin.jpg'
+    image: '/gc.jpg',
   },
   {
     id: 'gcp-cloud',
     title: 'Google Cloud Computing',
     issuer: 'Google',
     date: 'Jun 2025',
-    skills: [],
-    image: '/gca.jpg'
-  }
+    skills: ['Cloud Computing', 'Google Cloud Platform'],
+    image: '/gca.jpg',
+  },
+  {
+    id: 'kominfo-litdig',
+    title: 'Literasi Digital Perguruan Tinggi: Melawan Hoax dan Ujaran Kebencian',
+    issuer: 'KOMINFO',
+    date: 'Mei 2023',
+    credentialId: '25328516/23-27424/LITDIG/2023',
+    skills: ['Digital Literacy', 'Cyber Ethics'],
+    file: '/274245484850657032.pdf',
+  },
+  {
+    id: 'dilesin-cert',
+    title: 'Dilesin Academy Certifications',
+    issuer: 'Dilesin',
+    date: 'Aug 2024',
+    skills: ['Web Development'],
+    image: '/dilesin.jpg',
+  },
 ];

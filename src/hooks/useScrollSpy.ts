@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 
-export function useScrollSpy(ids: string[], offset: number = 0) {
+export function useScrollSpy(ids: string[], offset: number = 80) {
   const [activeId, setActiveId] = useState<string>('');
 
   useEffect(() => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -12,7 +16,7 @@ export function useScrollSpy(ids: string[], offset: number = 0) {
           }
         });
       },
-      { rootMargin: `0px 0px -80% 0px` }
+      { rootMargin: `0px 0px -${offset}% 0px` }
     );
 
     ids.forEach((id) => {

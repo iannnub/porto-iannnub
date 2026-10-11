@@ -12,20 +12,27 @@ interface ProjectGalleryModalProps {
 
 export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectGalleryModalProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
-  // Reset to first image when opened with new images
-  useEffect(() => {
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       setCurrentIndex(0);
-      document.body.style.overflow = 'hidden'; // Lock scroll
-    } else {
-      document.body.style.overflow = ''; // Unlock scroll
     }
-    
+  }
+
+  // Manage body scroll locking
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isOpen, images]);
+  }, [isOpen]);
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
@@ -93,7 +100,7 @@ export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectG
                 className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-lg"
                 loading="lazy"
                 decoding="async"
-                drag={hasMultipleImages ? "x" : false}
+                drag={hasMultipleImages ? 'x' : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
                 onDragEnd={(_, { offset, velocity }) => {
@@ -115,14 +122,20 @@ export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectG
                   className="absolute left-2 md:left-4 p-3 text-white/50 hover:text-white bg-black/20 hover:bg-black/60 rounded-full backdrop-blur-md transition-all -translate-y-1/2 top-1/2 group"
                   aria-label="Previous image"
                 >
-                  <ChevronLeft size={32} className="group-hover:-translate-x-0.5 transition-transform" />
+                  <ChevronLeft
+                    size={32}
+                    className="group-hover:-translate-x-0.5 transition-transform"
+                  />
                 </button>
                 <button
                   onClick={goToNext}
                   className="absolute right-2 md:right-4 p-3 text-white/50 hover:text-white bg-black/20 hover:bg-black/60 rounded-full backdrop-blur-md transition-all -translate-y-1/2 top-1/2 group"
                   aria-label="Next image"
                 >
-                  <ChevronRight size={32} className="group-hover:translate-x-0.5 transition-transform" />
+                  <ChevronRight
+                    size={32}
+                    className="group-hover:translate-x-0.5 transition-transform"
+                  />
                 </button>
               </>
             )}

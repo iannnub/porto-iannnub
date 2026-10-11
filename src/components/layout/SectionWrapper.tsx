@@ -17,8 +17,8 @@ export const SectionWrapper = forwardRef<HTMLElement, SectionWrapperProps>(
         ref={ref}
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
         className={cn(
           'w-full max-w-6xl mx-auto px-6 md:px-12 py-24 md:py-32 relative z-10',
           className

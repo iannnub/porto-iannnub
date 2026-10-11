@@ -7,15 +7,26 @@ import { ExperienceFull } from './ExperienceFull';
 
 export function ExperienceJourney() {
   const tier = useDevicePerformanceTier();
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile(); // Check immediately on mount
+    let timeoutId: number;
+    const checkMobile = () => {
+      clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 150);
+    };
+
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
-  
+
   // For 'full' tier on DESKTOP ONLY, we use pinning.
   // On mobile, horizontal scrolling cards are unreadable, so we fallback.
   if (tier === 'full' && !isMobile) {

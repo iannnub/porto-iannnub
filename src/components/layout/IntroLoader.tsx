@@ -26,7 +26,7 @@ export function IntroLoader() {
 
     return () => {
       clearTimeout(timer);
-      // We purposefully don't pause the audio here so the turbo flutter can ring out 
+      // We purposefully don't pause the audio here so the turbo flutter can ring out
       // into the main page view for a seamless transition.
     };
   }, [isLoading, hasStarted]);
@@ -40,8 +40,8 @@ export function IntroLoader() {
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[101] bg-[#050508] flex items-center justify-center"
         >
-          <button 
-            onClick={() => setHasStarted(true)} 
+          <button
+            onClick={() => setHasStarted(true)}
             className="px-8 py-4 border-2 border-accent-red text-accent-red font-display text-2xl hover:bg-accent-red hover:text-white transition-all rounded shadow-[0_0_20px_rgba(224,40,46,0.5)]"
           >
             TAP TO START ENGINE
@@ -57,9 +57,8 @@ export function IntroLoader() {
           className="fixed inset-0 z-[100] bg-[#050508] flex items-center justify-center pointer-events-none overflow-hidden"
         >
           <div className="relative w-full max-w-4xl h-64 flex items-center justify-center">
-            
             {/* Speed lines effect (appears when driving off) */}
-            <motion.div 
+            <motion.div
               className="absolute inset-0 flex items-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: [0, 0, 1, 0] }}
@@ -72,7 +71,7 @@ export function IntroLoader() {
                   style={{ top: `${30 + i * 15}%`, left: '10%' }}
                   initial={{ width: 0, x: 0 }}
                   animate={{ width: [0, 200, 0], x: [0, 800, 1500] }}
-                  transition={{ duration: 0.6, delay: 2.2 + i * 0.05, ease: "linear" }}
+                  transition={{ duration: 0.6, delay: 2.2 + i * 0.05, ease: 'linear' }}
                 />
               ))}
             </motion.div>
@@ -80,18 +79,18 @@ export function IntroLoader() {
             {/* Porsche GT3 RS SVG & Animation */}
             <motion.div
               initial={{ opacity: 0, x: -100 }}
-              animate={{ 
-                opacity: [0, 1, 1, 1, 0], 
+              animate={{
+                opacity: [0, 1, 1, 1, 0],
                 x: [-100, 0, 0, 1500, 1500],
                 y: [0, 0, -2, 2, -1, 1, 0, 0],
-                rotate: [0, 0, -1, 1, -0.5, 0.5, 0, -5]
+                rotate: [0, 0, -1, 1, -0.5, 0.5, 0, -5],
               }}
-              transition={{ 
-                duration: 3, 
+              transition={{
+                duration: 3,
                 times: [0, 0.3, 0.4, 0.8, 1],
-                y: { duration: 1, delay: 1, repeat: 1, repeatType: "mirror" }, // Revving vibration
-                rotate: { duration: 1, delay: 1, repeat: 1, repeatType: "mirror" },
-                ease: "easeInOut"
+                y: { duration: 1, delay: 1, repeat: 1, repeatType: 'mirror' }, // Revving vibration
+                rotate: { duration: 1, delay: 1, repeat: 1, repeatType: 'mirror' },
+                ease: 'easeInOut',
               }}
               className="relative z-10"
             >
@@ -104,25 +103,35 @@ export function IntroLoader() {
                 style={{ originX: 1 }}
               />
 
-              <svg viewBox="0 0 300 100" className="w-72 md:w-[500px] text-white drop-shadow-[0_0_20px_rgba(224,40,46,0.3)]">
+              <svg
+                viewBox="0 0 300 100"
+                className="w-72 md:w-[500px] text-white drop-shadow-[0_0_20px_rgba(224,40,46,0.3)]"
+              >
                 {/* Car Body */}
-                <path d="M30 70 
+                <path
+                  d="M30 70 
                          C 20 70, 10 60, 15 50
                          C 30 45, 60 40, 80 35
                          C 120 20, 160 20, 190 35
                          C 220 40, 260 45, 275 45
                          C 285 45, 290 55, 290 65
                          C 290 70, 280 70, 270 70
-                         Z" 
-                      fill="currentColor"/>
+                         Z"
+                  fill="currentColor"
+                />
                 {/* GT3 Wing */}
-                <path d="M 30 45 L 20 20 L 70 15 L 60 40 Z" fill="#0A0A0F" stroke="currentColor" strokeWidth="2" />
+                <path
+                  d="M 30 45 L 20 20 L 70 15 L 60 40 Z"
+                  fill="#0A0A0F"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
                 <path d="M 25 15 L 75 10" stroke="#E0282E" strokeWidth="4" />
                 {/* Windows */}
                 <path d="M 110 30 C 140 25, 170 25, 185 35 L 185 45 L 100 45 Z" fill="#0A0A0F" />
                 {/* Red Decal / Line */}
                 <path d="M 80 60 L 260 60" stroke="#E0282E" strokeWidth="3" opacity="0.8" />
-                
+
                 {/* Wheels */}
                 {/* Back Wheel (left) */}
                 <motion.g
@@ -149,7 +158,7 @@ export function IntroLoader() {
                 </motion.g>
               </svg>
             </motion.div>
-            
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: [0, 1, 1, 0] }}

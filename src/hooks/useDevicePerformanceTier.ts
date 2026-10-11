@@ -7,7 +7,10 @@ export function useDevicePerformanceTier(): PerformanceTier {
     let isWebGLAvailable = false;
     try {
       const canvas = document.createElement('canvas');
-      isWebGLAvailable = !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+      isWebGLAvailable = !!(
+        window.WebGLRenderingContext &&
+        (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+      );
     } catch {
       // Ignore
     }
