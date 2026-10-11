@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
+import { profileData } from '@/data/profile';
 
 const NAV_LINKS = [
   { name: 'About', href: '#about' },
@@ -68,14 +69,16 @@ export function Navbar() {
               </li>
             ))}
           </ul>
-          <a
-            href="/assets/cv/CV%20UMUM.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full font-sans font-medium transition-colors bg-accent-red text-white hover:bg-red-600 shadow-[0_0_20px_rgba(224,40,46,0.5)] px-3 py-1.5 text-sm"
-          >
-            Download CV
-          </a>
+          {profileData.socials.resume && (
+            <a
+              href={profileData.socials.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full font-sans font-medium transition-colors bg-accent-red text-white hover:bg-red-600 shadow-[0_0_20px_rgba(224,40,46,0.5)] px-3 py-1.5 text-sm"
+            >
+              Download CV
+            </a>
+          )}
         </nav>
 
         {/* Mobile Menu Toggle */}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { Button } from '@/components/ui/Button';
 import { profileData } from '@/data/profile';
+import { triggerEngineStart } from '@/lib/engineEvents';
 import { motion } from 'framer-motion';
 
 export function Hero() {
@@ -19,30 +20,31 @@ export function Hero() {
       id="hero"
       className="min-h-screen flex flex-col-reverse md:flex-row items-center justify-between overflow-hidden pt-32 md:pt-0"
     >
-      {/* Left: Text Content */}
+      {/* Left: Text Content (LCP element - rendered immediately without delay) */}
       <div className="relative z-10 w-full md:w-1/2 flex flex-col gap-6 mt-12 md:mt-0">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-        >
-          <p className="font-mono text-accent-blue mb-4">Hello, I am</p>
+        <div>
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <p className="font-mono text-accent-blue">Hello, I am</p>
+            <button
+              onClick={triggerEngineStart}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent-red/50 bg-accent-red/10 text-accent-red text-xs font-mono tracking-wider hover:bg-accent-red hover:text-white transition-all shadow-[0_0_15px_rgba(224,40,46,0.2)] active:scale-95"
+              title="Ignition - Porsche Rev & Sound"
+            >
+              <span className="w-2 h-2 rounded-full bg-accent-red animate-pulse" />
+              START ENGINE 🏎️
+            </button>
+          </div>
           <h1 className="font-display text-5xl md:text-7xl text-primary uppercase tracking-wider leading-none bg-gradient-to-r from-accent-red to-accent-blue bg-clip-text text-transparent break-words">
             {profileData.name}
           </h1>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="h-8 md:h-12 overflow-hidden flex items-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-        >
+        <div className="h-8 md:h-12 overflow-hidden flex items-center">
           <motion.p
             key={roleIndex}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0, y: -10 }}
             className="font-mono text-lg md:text-2xl text-accent-red flex items-center"
           >
             <span className="mr-2">&gt;</span>
@@ -53,23 +55,13 @@ export function Hero() {
               className="ml-1 w-2 md:w-3 h-5 md:h-7 bg-accent-red inline-block"
             />
           </motion.p>
-        </motion.div>
+        </div>
 
-        <motion.p
-          className="font-sans text-secondary text-lg max-w-lg leading-relaxed"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-        >
+        <p className="font-sans text-secondary text-lg max-w-lg leading-relaxed">
           {profileData.about[3]}
-        </motion.p>
+        </p>
 
-        <motion.div
-          className="flex flex-wrap gap-4 mt-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
-        >
+        <div className="flex flex-wrap gap-4 mt-6">
           <Button
             variant="primary"
             onClick={() =>
@@ -96,7 +88,7 @@ export function Hero() {
           >
             Contact Me
           </Button>
-        </motion.div>
+        </div>
       </div>
 
       {/* Right: 3D Scene */}
@@ -134,7 +126,7 @@ export function Hero() {
               height={320}
               fetchPriority="high"
               decoding="async"
-              className="w-48 md:w-80 object-contain relative z-10"
+              className="w-48 md:w-80 aspect-square object-contain relative z-10"
               style={{
                 marginTop: 'calc(40vh - 20px)',
                 marginLeft: '-20px',

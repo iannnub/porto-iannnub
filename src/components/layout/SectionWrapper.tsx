@@ -11,14 +11,16 @@ export interface SectionWrapperProps extends HTMLMotionProps<'section'> {
  */
 export const SectionWrapper = forwardRef<HTMLElement, SectionWrapperProps>(
   ({ id, className, children, ...props }, ref) => {
+    const isHero = id === 'hero';
+
     return (
       <motion.section
         id={id}
         ref={ref}
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        initial={isHero ? false : { opacity: 0, y: 24 }}
+        whileInView={isHero ? undefined : { opacity: 1, y: 0 }}
+        viewport={isHero ? undefined : { once: true, margin: '-100px' }}
+        transition={isHero ? undefined : { duration: 0.6, ease: 'easeOut' }}
         className={cn(
           'w-full max-w-6xl mx-auto px-6 md:px-12 py-24 md:py-32 relative z-10',
           className

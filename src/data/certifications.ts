@@ -17,6 +17,7 @@ export const certificationsData: Certification[] = [
     credentialId: 'ALM-COURSE_3946359',
     skills: ['AI Agents', 'Prompt Engineering', 'LangChain'],
     file: '/Completion Certificate _ SkillsBuild.pdf',
+    image: '/ibm-agent.jpg',
   },
   {
     id: 'ibm-llm',
@@ -26,6 +27,7 @@ export const certificationsData: Certification[] = [
     credentialId: 'ALM-COURSE_4058915',
     skills: ['Large Language Models', 'Artificial Intelligence (AI)'],
     file: '/1. Completion Certificate _ SkillsBuild.pdf',
+    image: '/ibm-llm.jpg',
   },
   {
     id: 'aws-cert',
@@ -70,6 +72,7 @@ export const certificationsData: Certification[] = [
     credentialId: '25328516/23-27424/LITDIG/2023',
     skills: ['Digital Literacy', 'Cyber Ethics'],
     file: '/274245484850657032.pdf',
+    image: '/kominfo.jpg',
   },
   {
     id: 'dilesin-cert',

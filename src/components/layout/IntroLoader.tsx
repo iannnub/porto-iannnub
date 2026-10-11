@@ -2,59 +2,43 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function IntroLoader() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    if (!isLoading || !hasStarted) return;
+    const handleStart = () => {
+      setIsPlaying(true);
 
-    // AUDIO LOGIC
-    try {
-      const audio = new Audio('/jdm-engine.mp3');
-      audio.volume = 1.0;
-      audio.play().catch(() => {
-        // Autoplay blocked by browser
-      });
-    } catch {
-      // Ignore
-    }
+      // AUDIO LOGIC
+      try {
+        const audio = new Audio('/jdm-engine.mp3');
+        audio.volume = 1.0;
+        audio.play().catch(() => {
+          // Autoplay blocked by browser
+        });
+      } catch {
+        // Ignore
+      }
 
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      // Let the audio play out naturally even after loader disappears
-    }, 3500);
+      const timer = setTimeout(() => {
+        setIsPlaying(false);
+      }, 3500);
 
-    return () => {
-      clearTimeout(timer);
-      // We purposefully don't pause the audio here so the turbo flutter can ring out
-      // into the main page view for a seamless transition.
+      return () => clearTimeout(timer);
     };
-  }, [isLoading, hasStarted]);
+
+    window.addEventListener('start-engine', handleStart);
+    return () => window.removeEventListener('start-engine', handleStart);
+  }, []);
 
   return (
     <AnimatePresence>
-      {isLoading && !hasStarted && (
+      {isPlaying && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[101] bg-[#050508] flex items-center justify-center"
-        >
-          <button
-            onClick={() => setHasStarted(true)}
-            className="px-8 py-4 border-2 border-accent-red text-accent-red font-display text-2xl hover:bg-accent-red hover:text-white transition-all rounded shadow-[0_0_20px_rgba(224,40,46,0.5)]"
-          >
-            TAP TO START ENGINE
-          </button>
-        </motion.div>
-      )}
-
-      {isLoading && hasStarted && (
-        <motion.div
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[100] bg-[#050508] flex items-center justify-center pointer-events-none overflow-hidden"
+          transition={{ duration: 0.4, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center pointer-events-none overflow-hidden"
         >
           <div className="relative w-full max-w-4xl h-64 flex items-center justify-center">
             {/* Speed lines effect (appears when driving off) */}
