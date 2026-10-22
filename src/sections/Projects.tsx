@@ -30,7 +30,7 @@ export function Projects() {
               transition={{ type: 'spring', stiffness: 100, damping: 12 }}
             >
               <Card className="h-full flex flex-col p-0 border-accent-line hover:border-accent-blue/50 transition-all duration-300 rounded-2xl bg-white/5 backdrop-blur-md overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,108,223,0.3)]">
-                <div className="w-full h-40 bg-gradient-to-br from-accent-red/20 to-accent-blue/20 flex items-center justify-center border-b border-white/10 group-hover:from-accent-red/30 group-hover:to-accent-blue/30 transition-colors">
+                <div className="w-full h-40 bg-elevated-2 flex items-center justify-center border-b border-accent-line transition-colors">
                   <h3 className="font-display text-3xl tracking-wide text-white drop-shadow-md text-center px-4">
                     {project.title}
                   </h3>
@@ -66,9 +66,8 @@ export function Projects() {
                     {project.images && project.images.length > 0 && (
                       <button
                         onClick={() => setActiveGalleryProject(project)}
-                        className="relative flex items-center gap-2 text-sm font-bold transition-all px-4 py-2 rounded-full bg-gradient-to-r from-accent-blue/20 to-accent-blue/10 border border-accent-blue/50 text-blue-300 hover:from-accent-blue hover:to-blue-600 hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(45,108,223,0.6)] ml-auto group overflow-hidden"
+                        className="relative flex items-center gap-2 text-sm font-medium transition-all px-4 py-2 rounded-full bg-accent-blue/15 hover:bg-accent-blue border border-accent-blue/40 text-accent-blue-glow hover:text-white ml-auto group"
                       >
-                        <div className="absolute inset-0 bg-accent-blue/10 animate-pulse" />
                         <Camera
                           size={16}
                           className="relative z-10 group-hover:scale-110 transition-transform"

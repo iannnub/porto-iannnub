@@ -80,7 +80,7 @@ export function IntroLoader() {
             >
               {/* Exhaust flame */}
               <motion.div
-                className="absolute left-[-20px] bottom-[20px] w-8 h-3 bg-gradient-to-r from-accent-blue to-accent-red rounded-full blur-[2px]"
+                className="absolute left-[-20px] bottom-[20px] w-8 h-3 bg-accent-red rounded-full blur-[2px]"
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: [0, 0, 1, 0], scaleX: [0, 0, 2, 0] }}
                 transition={{ duration: 3, times: [0, 0.4, 0.75, 1] }}

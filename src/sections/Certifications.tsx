@@ -37,10 +37,9 @@ export function Certifications() {
                     decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
               ) : (
-                <div className="w-full h-40 bg-gradient-to-br from-accent-blue/15 to-accent-red/15 border-b border-white/10 flex flex-col items-center justify-center relative p-4 text-center">
+                <div className="w-full h-40 bg-elevated-2 border-b border-accent-line flex flex-col items-center justify-center relative p-4 text-center">
                   <Award
                     size={36}
                     className="text-accent-blue mb-2 group-hover:scale-110 group-hover:text-accent-red transition-all duration-300"

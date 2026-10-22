@@ -25,8 +25,25 @@ export function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   return (
@@ -83,9 +100,11 @@ export function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden text-primary p-2"
+          className="md:hidden text-primary p-2 min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-lg"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle Menu"
+          aria-label={isMobileMenuOpen ? 'Close Menu' : 'Open Menu'}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="mobile-navigation"
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -93,14 +112,17 @@ export function Navbar() {
 
       {/* Mobile Nav */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-elevated border-b border-accent-line shadow-xl">
+        <div
+          id="mobile-navigation"
+          className="md:hidden absolute top-full left-0 right-0 bg-elevated border-b border-accent-line shadow-xl"
+        >
           <nav className="flex flex-col px-6 py-6 gap-4">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 className={cn(
-                  'text-lg font-medium py-2 transition-colors',
+                  'text-lg font-medium py-2 transition-colors min-h-[44px] flex items-center',
                   activeSection === link.href.substring(1) ? 'text-accent-blue' : 'text-primary'
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -108,14 +130,16 @@ export function Navbar() {
                 {link.name}
               </a>
             ))}
-            <a
-              href="/assets/cv/CV%20UMUM.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full font-sans font-medium transition-colors bg-accent-red text-white hover:bg-red-600 shadow-[0_0_20px_rgba(224,40,46,0.5)] px-4 py-2 text-base mt-4 w-full"
-            >
-              Download CV
-            </a>
+            {profileData.socials.resume && (
+              <a
+                href={profileData.socials.resume}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full font-sans font-medium transition-colors bg-accent-red text-white hover:bg-red-600 shadow-[0_0_20px_rgba(224,40,46,0.5)] px-4 py-2 text-base mt-4 w-full min-h-[44px]"
+              >
+                Download CV
+              </a>
+            )}
           </nav>
         </div>
       )}

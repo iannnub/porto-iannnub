@@ -34,8 +34,9 @@ export function Hero() {
               START ENGINE 🏎️
             </button>
           </div>
-          <h1 className="font-display text-5xl md:text-7xl text-primary uppercase tracking-wider leading-none bg-gradient-to-r from-accent-red to-accent-blue bg-clip-text text-transparent break-words">
+          <h1 className="font-display text-5xl md:text-7xl text-white uppercase tracking-wider leading-none break-words">
             {profileData.name}
+            <span className="text-accent-red">.</span>
           </h1>
         </div>
 
@@ -94,16 +95,6 @@ export function Hero() {
       {/* Right: 3D Scene */}
       <div className="relative z-0 w-full md:w-1/2 h-[50vh] md:h-screen flex items-center justify-center">
         <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
-          {/* Static Background Effect */}
-          <div
-            className="absolute inset-0 opacity-20"
-            style={{
-              backgroundImage: 'radial-gradient(circle, #5B9CFF 1px, transparent 1px)',
-              backgroundSize: '40px 40px',
-            }}
-          />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-tr from-accent-red to-accent-blue blur-[80px] opacity-20" />
-
           {/* Spiderman Animation */}
           <motion.div
             className="absolute top-[-10vh] right-[20%] md:right-[30%] origin-top"

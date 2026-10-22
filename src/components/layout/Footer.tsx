@@ -11,7 +11,7 @@ export function Footer() {
 
   return (
     <footer className="w-full bg-base relative z-10 font-sans mt-24">
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-accent-red to-accent-blue opacity-50" />
+      <div className="w-full h-px bg-accent-line/60" />
       <div className="max-w-6xl mx-auto px-6 md:px-12 py-12 flex flex-col items-center gap-6">
         <a
           href="#"

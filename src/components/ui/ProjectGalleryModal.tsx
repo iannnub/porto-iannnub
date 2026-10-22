@@ -63,6 +63,9 @@ export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectG
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -73,7 +76,7 @@ export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectG
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 md:top-8 md:right-8 z-50 p-2 text-white/70 hover:text-white bg-black/20 hover:bg-black/50 rounded-full backdrop-blur-md transition-all"
+            className="absolute top-4 right-4 md:top-8 md:right-8 z-50 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-white/70 hover:text-white bg-black/20 hover:bg-black/50 rounded-full backdrop-blur-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
             aria-label="Close gallery"
           >
             <X size={24} />
@@ -119,7 +122,7 @@ export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectG
               <>
                 <button
                   onClick={goToPrev}
-                  className="absolute left-2 md:left-4 p-3 text-white/50 hover:text-white bg-black/20 hover:bg-black/60 rounded-full backdrop-blur-md transition-all -translate-y-1/2 top-1/2 group"
+                  className="absolute left-2 md:left-4 p-3 min-w-[48px] min-h-[48px] flex items-center justify-center text-white/50 hover:text-white bg-black/20 hover:bg-black/60 rounded-full backdrop-blur-md transition-all -translate-y-1/2 top-1/2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
                   aria-label="Previous image"
                 >
                   <ChevronLeft
@@ -129,7 +132,7 @@ export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectG
                 </button>
                 <button
                   onClick={goToNext}
-                  className="absolute right-2 md:right-4 p-3 text-white/50 hover:text-white bg-black/20 hover:bg-black/60 rounded-full backdrop-blur-md transition-all -translate-y-1/2 top-1/2 group"
+                  className="absolute right-2 md:right-4 p-3 min-w-[48px] min-h-[48px] flex items-center justify-center text-white/50 hover:text-white bg-black/20 hover:bg-black/60 rounded-full backdrop-blur-md transition-all -translate-y-1/2 top-1/2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
                   aria-label="Next image"
                 >
                   <ChevronRight
@@ -142,18 +145,22 @@ export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectG
 
             {/* Indicators */}
             {hasMultipleImages && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
                 {images.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      idx === currentIndex
-                        ? 'bg-accent-blue w-6 shadow-[0_0_8px_rgba(45,108,223,0.8)]'
-                        : 'bg-white/30 hover:bg-white/60'
-                    }`}
+                    className="min-w-[28px] min-h-[28px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-full"
                     aria-label={`Go to image ${idx + 1}`}
-                  />
+                  >
+                    <span
+                      className={`h-2 rounded-full transition-all duration-300 block ${
+                        idx === currentIndex
+                          ? 'bg-accent-blue w-6 shadow-[0_0_8px_rgba(45,108,223,0.8)]'
+                          : 'bg-white/30 hover:bg-white/60 w-2'
+                      }`}
+                    />
+                  </button>
                 ))}
               </div>
             )}

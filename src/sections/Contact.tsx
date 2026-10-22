@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import emailjs from '@emailjs/browser';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { SectionHeading } from '@/components/ui/SectionHeading';
@@ -10,23 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { profileData } from '@/data/profile';
 import { Send } from 'lucide-react';
 import { FaLinkedin } from 'react-icons/fa';
-
-const contactSchema = z.object({
-  name: z.string().trim().min(2, 'Name is too short').max(80, 'Name cannot exceed 80 characters'),
-  email: z
-    .string()
-    .trim()
-    .email('Invalid email address')
-    .max(120, 'Email cannot exceed 120 characters'),
-  message: z
-    .string()
-    .trim()
-    .min(10, 'Message must be at least 10 characters')
-    .max(2000, 'Message cannot exceed 2000 characters'),
-  botField: z.string().max(0, 'Bot detected').optional(),
-});
-
-type ContactFormValues = z.infer<typeof contactSchema>;
+import { contactSchema, type ContactFormValues } from '@/lib/contactSchema';
 
 export function Contact() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -155,7 +138,7 @@ export function Contact() {
                   />
                   <label
                     htmlFor="name"
-                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-accent-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
+                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
                   >
                     Name
                   </label>
@@ -177,7 +160,7 @@ export function Contact() {
                   />
                   <label
                     htmlFor="email"
-                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-accent-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
+                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
                   >
                     Email
                   </label>
@@ -200,7 +183,7 @@ export function Contact() {
                 />
                 <label
                   htmlFor="message"
-                  className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-accent-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
+                  className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
                 >
                   Message
                 </label>
@@ -216,7 +199,8 @@ export function Contact() {
                 variant="primary"
                 size="lg"
                 disabled={status === 'loading' || cooldown}
-                className="w-full mt-4 font-bold tracking-wider"
+                className="w-full mt-4 font-bold tracking-wider min-h-[48px]"
+                aria-live="polite"
               >
                 {status === 'loading' && (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
@@ -226,6 +210,16 @@ export function Contact() {
                 {status === 'success' && 'SENT SUCCESSFULLY'}
                 {status === 'error' && 'FAILED TO SEND'}
               </Button>
+              {status === 'success' && (
+                <p role="status" className="text-emerald-400 font-mono text-xs text-center">
+                  Message delivered. Thank you!
+                </p>
+              )}
+              {status === 'error' && (
+                <p role="status" className="text-accent-red font-mono text-xs text-center">
+                  Could not deliver message. Please contact directly via email or LinkedIn.
+                </p>
+              )}
             </form>
           </Card>
         </div>

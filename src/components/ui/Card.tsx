@@ -20,15 +20,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         )}
         {...props}
       >
-        {/* Optional halftone texture overlay could go here */}
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)',
-            backgroundSize: '8px 8px',
-          }}
-        ></div>
-        <div className="relative z-10">{children}</div>
+        {children}
       </div>
     );
   }

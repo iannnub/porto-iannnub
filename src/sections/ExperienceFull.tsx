@@ -72,7 +72,7 @@ export function ExperienceFull({ data = experienceData }: { data?: Experience[] 
         ref={trackRef}
         className="flex gap-12 lg:gap-24 items-center pl-12 pr-[50vw] z-10 relative h-full"
       >
-        <div className="absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-accent-red to-accent-blue -translate-y-1/2 z-0" />
+        <div className="absolute top-1/2 left-0 w-full h-0.5 bg-accent-line -translate-y-1/2 z-0" />
 
         {data.map((exp, idx) => {
           const isLatest = idx === 0;

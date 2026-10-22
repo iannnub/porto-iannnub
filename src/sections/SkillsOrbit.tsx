@@ -93,8 +93,13 @@ export function SkillsOrbit() {
   return (
     <SectionWrapper id="skills" className="overflow-hidden">
       <SectionHeading title="Skills" subtitle="My technical toolkit" />
-      <div className="mt-12 w-full flex justify-center items-center min-h-[500px]">
-        {tier === 'static' ? <StaticSkills /> : <OrbitingSkills />}
+      <div className="mt-12 w-full flex justify-center items-center min-h-[400px]">
+        <div className="md:hidden w-full flex justify-center">
+          <StaticSkills />
+        </div>
+        <div className="hidden md:flex w-full justify-center items-center">
+          {tier === 'static' ? <StaticSkills /> : <OrbitingSkills />}
+        </div>
       </div>
 
       {tier !== 'static' && (
