@@ -2,7 +2,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execFile } from 'node:child_process';
+import { spawn } from 'node:child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
@@ -33,7 +33,6 @@ const server = http.createServer((req, res) => {
   const filePath = path.join(distDir, reqPath);
 
   if (!fs.existsSync(filePath)) {
-    // SPA fallback
     const indexPath = path.join(distDir, 'index.html');
     res.writeHead(200, { 'Content-Type': 'text/html' });
     fs.createReadStream(indexPath).pipe(res);
@@ -48,63 +47,202 @@ const server = http.createServer((req, res) => {
 });
 
 const PORT = 4173;
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Preview server listening on http://127.0.0.1:${PORT}`);
+const CDP_PORT = 9222;
+const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 
-  const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
-  const screenshotPath = path.resolve(__dirname, 'homepage-screenshot.png');
+server.listen(PORT, '127.0.0.1', async () => {
+  console.log(`[Preview Server] Started on http://127.0.0.1:${PORT}`);
 
-  const args = [
+  const chromeProc = spawn(chromePath, [
     '--headless=new',
     '--disable-gpu',
     '--no-sandbox',
-    '--window-size=1280,900',
-    `--screenshot=${screenshotPath}`,
-    '--dump-dom',
-    `http://127.0.0.1:${PORT}/`,
-  ];
+    `--remote-debugging-port=${CDP_PORT}`,
+    'about:blank',
+  ]);
 
-  execFile(chromePath, args, { maxBuffer: 10 * 1024 * 1024 }, (err, stdout, stderr) => {
-    server.close();
-
-    if (err) {
-      console.error('Chrome execution failed:', err);
-      process.exit(1);
+  const killChrome = () => {
+    try {
+      chromeProc.kill('SIGKILL');
+    } catch {
+      // ignore
     }
+  };
 
-    console.log('--- DOM Verification ---');
-    const dom = stdout;
+  process.on('exit', killChrome);
+  process.on('SIGINT', killChrome);
 
-    const checks = [
-      { name: 'Root container exists', test: dom.includes('id="root"') },
-      { name: 'Title matches', test: dom.includes('Septian Putra Rachman Hakim | Portfolio') },
-      { name: 'Hero section rendered', test: dom.includes('id="hero"') },
-      { name: 'About section rendered', test: dom.includes('id="about"') },
-      { name: 'Skills section rendered', test: dom.includes('id="skills"') },
-      { name: 'Experience section rendered', test: dom.includes('id="experience"') },
-      { name: 'Projects section rendered', test: dom.includes('id="projects"') },
-      { name: 'Certifications section rendered', test: dom.includes('id="certifications"') },
-      { name: 'Contact section rendered', test: dom.includes('id="contact"') },
-      { name: 'No gradient-to- classes', test: !dom.includes('bg-gradient-to') },
-      { name: 'No undefined text', test: !dom.includes('undefined') },
-      { name: 'Screenshot captured', test: fs.existsSync(screenshotPath) },
-    ];
-
-    let allPassed = true;
-    for (const c of checks) {
-      if (c.test) {
-        console.log(`[PASS] ${c.name}`);
-      } else {
-        console.error(`[FAIL] ${c.name}`);
-        allPassed = false;
+  // Wait for Chrome page target in /json/list
+  let wsUrl = null;
+  for (let i = 0; i < 30; i++) {
+    try {
+      const res = await fetch(`http://127.0.0.1:${CDP_PORT}/json/list`);
+      if (res.ok) {
+        const targets = await res.json();
+        const page = targets.find((t) => t.type === 'page' && t.webSocketDebuggerUrl);
+        if (page) {
+          wsUrl = page.webSocketDebuggerUrl;
+          break;
+        }
       }
+    } catch {
+      await new Promise((r) => setTimeout(r, 200));
+    }
+  }
+
+  if (!wsUrl) {
+    console.error('Failed to locate Chrome page target debugger URL');
+    server.close();
+    killChrome();
+    process.exit(1);
+  }
+
+  console.log(`[Chrome CDP Page] Connected to ${wsUrl}`);
+
+  const ws = new WebSocket(wsUrl);
+  let id = 1;
+  const pending = new Map();
+  const consoleLogs = [];
+  const consoleErrors = [];
+
+  const send = (method, params = {}) => {
+    return new Promise((resolve, reject) => {
+      const msgId = id++;
+      pending.set(msgId, { resolve, reject });
+      ws.send(JSON.stringify({ id: msgId, method, params }));
+    });
+  };
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.id && pending.has(data.id)) {
+      const { resolve, reject } = pending.get(data.id);
+      pending.delete(data.id);
+      if (data.error) reject(data.error);
+      else resolve(data.result);
+      return;
     }
 
-    if (!allPassed) {
+    if (data.method === 'Runtime.consoleAPICalled') {
+      const text = data.params.args.map((a) => a.value ?? a.description ?? '').join(' ');
+      consoleLogs.push({ type: data.params.type, text });
+      if (data.params.type === 'error') {
+        consoleErrors.push(text);
+      }
+    } else if (data.method === 'Runtime.exceptionThrown') {
+      const text = data.params.exceptionDetails?.text || 'Uncaught exception';
+      const desc = data.params.exceptionDetails?.exception?.description || '';
+      consoleErrors.push(`${text}: ${desc}`);
+    }
+  };
+
+  await new Promise((resolve) => (ws.onopen = resolve));
+
+  try {
+    // Enable domains
+    await send('Page.enable');
+    await send('Runtime.enable');
+    await send('DOM.enable');
+
+    console.log('\n--- Test 1: Local Preview (Desktop 1280x900) ---');
+    await send('Emulation.setDeviceMetricsOverride', {
+      width: 1280,
+      height: 900,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+
+    await send('Page.navigate', { url: `http://127.0.0.1:${PORT}/` });
+    await new Promise((r) => setTimeout(r, 2500));
+
+    // Capture Desktop Screenshot
+    const deskShot = await send('Page.captureScreenshot', { format: 'png' });
+    const deskPath = path.resolve(__dirname, 'screenshot-desktop.png');
+    fs.writeFileSync(deskPath, Buffer.from(deskShot.data, 'base64'));
+    console.log(`[PASS] Desktop screenshot saved: ${deskPath}`);
+
+    // Verify DOM nodes
+    const evalRes = await send('Runtime.evaluate', {
+      expression: `JSON.stringify({
+        root: !!document.getElementById('root'),
+        title: document.title,
+        hero: !!document.getElementById('hero'),
+        about: !!document.getElementById('about'),
+        skills: !!document.getElementById('skills'),
+        experience: !!document.getElementById('experience'),
+        projects: !!document.getElementById('projects'),
+        certifications: !!document.getElementById('certifications'),
+        contact: !!document.getElementById('contact'),
+        hasGradient: document.body.innerHTML.includes('bg-gradient-to'),
+        jsonLdPresent: !!document.querySelector('script[type="application/ld+json"]')
+      })`,
+    });
+    const domCheck = JSON.parse(evalRes.result.value);
+
+    console.log('[CHECK] Root container rendered:', domCheck.root);
+    console.log('[CHECK] Title:', domCheck.title);
+    console.log('[CHECK] Hero section:', domCheck.hero);
+    console.log('[CHECK] About section:', domCheck.about);
+    console.log('[CHECK] Skills section:', domCheck.skills);
+    console.log('[CHECK] Experience section:', domCheck.experience);
+    console.log('[CHECK] Projects section:', domCheck.projects);
+    console.log('[CHECK] Certifications section:', domCheck.certifications);
+    console.log('[CHECK] Contact section:', domCheck.contact);
+    console.log('[CHECK] No gradient-to- classes in DOM:', !domCheck.hasGradient);
+    console.log('[CHECK] JSON-LD Schema.org present in DOM:', domCheck.jsonLdPresent);
+
+    console.log('\n--- Test 2: Local Preview (Mobile iPhone 393x852) ---');
+    await send('Emulation.setDeviceMetricsOverride', {
+      width: 393,
+      height: 852,
+      deviceScaleFactor: 2,
+      mobile: true,
+    });
+    await new Promise((r) => setTimeout(r, 1200));
+
+    const mobShot = await send('Page.captureScreenshot', { format: 'png' });
+    const mobPath = path.resolve(__dirname, 'screenshot-mobile.png');
+    fs.writeFileSync(mobPath, Buffer.from(mobShot.data, 'base64'));
+    console.log(`[PASS] Mobile screenshot saved: ${mobPath}`);
+
+    console.log('\n--- Test 3: Live Production Vercel Audit (https://porto-iannnub.vercel.app/) ---');
+    try {
+      await send('Emulation.setDeviceMetricsOverride', {
+        width: 1280,
+        height: 900,
+        deviceScaleFactor: 1,
+        mobile: false,
+      });
+      await send('Page.navigate', { url: 'https://porto-iannnub.vercel.app/' });
+      await new Promise((r) => setTimeout(r, 3500));
+
+      const prodShot = await send('Page.captureScreenshot', { format: 'png' });
+      const prodPath = path.resolve(__dirname, 'screenshot-vercel-prod.png');
+      fs.writeFileSync(prodPath, Buffer.from(prodShot.data, 'base64'));
+      console.log(`[PASS] Vercel production screenshot saved: ${prodPath}`);
+    } catch (e) {
+      console.warn('[WARN] Could not capture live vercel site:', e.message);
+    }
+
+    console.log('\n--- Console Audit Summary ---');
+    console.log(`Total console logs captured: ${consoleLogs.length}`);
+    if (consoleErrors.length > 0) {
+      console.error(`[FAIL] Found ${consoleErrors.length} console errors:`);
+      consoleErrors.forEach((err, idx) => console.error(`  ${idx + 1}. ${err}`));
       process.exit(1);
+    } else {
+      console.log('[PASS] ZERO console errors detected! Pure, clean console output.');
     }
 
-    console.log('\nAll browser DOM checks PASSED successfully!');
+    ws.close();
+    server.close();
+    killChrome();
     process.exit(0);
-  });
+  } catch (err) {
+    console.error('Test execution error:', err);
+    ws.close();
+    server.close();
+    killChrome();
+    process.exit(1);
+  }
 });

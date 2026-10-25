@@ -7,17 +7,19 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /**
- * A reusable button component with variant and size support.
+ * A reusable button component with iOS-style tactile feedback, variant and size support.
+ * Strictly gradient-free.
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', ...props }, ref) => {
     const variants = {
-      primary: 'bg-accent-red text-white hover:bg-red-600 shadow-[0_0_20px_rgba(224,40,46,0.5)]',
+      primary:
+        'bg-accent-red text-white hover:bg-red-600 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_16px_rgba(224,40,46,0.45)]',
       secondary:
-        'bg-accent-blue text-white hover:bg-blue-600 shadow-[0_0_15px_rgba(45,108,223,0.3)]',
+        'bg-accent-blue text-white hover:bg-blue-600 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_16px_rgba(45,108,223,0.35)]',
       outline:
-        'border border-accent-blue text-primary hover:bg-accent-blue/10 shadow-[0_0_10px_rgba(45,108,223,0.2)]',
-      ghost: 'text-secondary hover:text-primary hover:bg-elevated-2',
+        'border border-accent-blue text-primary hover:bg-accent-blue/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_2px_8px_rgba(45,108,223,0.2)]',
+      ghost: 'text-secondary hover:text-primary hover:bg-white/5',
     };
 
     const sizes = {
@@ -30,7 +32,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-full font-sans font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue disabled:opacity-50 disabled:pointer-events-none',
+          'inline-flex items-center justify-center rounded-full font-sans font-medium transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue disabled:opacity-50 disabled:pointer-events-none select-none',
           variants[variant],
           sizes[size],
           className

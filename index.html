@@ -26,12 +26,12 @@
     
     <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://porto-iannnub.vercel.app/" /> <!-- Ganti dengan URL asli jika sudah dihosting -->
+    <meta property="og:url" content="https://porto-iannnub.vercel.app/" />
     <meta property="og:site_name" content="iannnub | Portfolio" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="iannnub | Portfolio" />
     <meta property="og:description" content="Portfolio of Septian Putra Rachman Hakim (iannnub), Software Engineer and AI Enthusiast specializing in web development and technical support." />
-    <meta property="og:image" content="https://porto-iannnub.vercel.app/og-image.jpg" /> <!-- Ganti URL ke link gambar sebenarnya nanti -->
+    <meta property="og:image" content="https://porto-iannnub.vercel.app/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="iannnub Portfolio Preview" />
@@ -44,6 +44,43 @@
     <meta name="twitter:title" content="iannnub | Portfolio" />
     <meta name="twitter:description" content="Portfolio of Septian Putra Rachman Hakim (iannnub), Software Engineer and AI Enthusiast." />
     <meta name="twitter:image" content="https://porto-iannnub.vercel.app/og-image.jpg" />
+
+    <!-- Structured Data (JSON-LD) for Googlebot & AI GEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://porto-iannnub.vercel.app/#person",
+            "name": "Septian Putra Rachman Hakim",
+            "alternateName": "iannnub",
+            "url": "https://porto-iannnub.vercel.app/",
+            "jobTitle": "Software Engineer & AI Enthusiast",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Jember",
+              "addressRegion": "Jawa Timur",
+              "addressCountry": "ID"
+            },
+            "sameAs": [
+              "https://github.com/iannnub",
+              "https://linkedin.com/in/iannnub"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://porto-iannnub.vercel.app/#website",
+            "url": "https://porto-iannnub.vercel.app/",
+            "name": "Septian Putra Rachman Hakim Portfolio",
+            "description": "Portfolio of Septian Putra Rachman Hakim (iannnub), Software Engineer and AI Enthusiast specializing in web development and technical support.",
+            "author": {
+              "@id": "https://porto-iannnub.vercel.app/#person"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body class="bg-[#0A0A0F] text-[#F3F4F6] antialiased selection:bg-[#E0282E] selection:text-white">
     <div id="root"></div>

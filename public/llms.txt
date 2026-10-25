@@ -1,0 +1,29 @@
+# Septian Putra Rachman Hakim (iannnub) - Portfolio
+
+> Software Engineer and AI Systems Specialist based in Jember, East Java, Indonesia.
+> Information Systems graduate (S.Kom, GPA 3.88/4.00) with 5+ years of hands-on production engineering experience.
+
+## Professional Summary
+- Specializes in full-stack web engineering, resilient backend systems, and applied AI/ML architectures.
+- Core Stack: TypeScript, React 19, Vite, Next.js, Node.js, Python, FastAPI, Laravel, Tailwind CSS, PostgreSQL, Vector Databases (ChromaDB, LangChain).
+- Digital Business Operations: Founder of Javapedia, managing Midtrans payment gateway integrations, automated reconciliation, and webhook reliability.
+
+## Key Projects
+- JemberTrip: AI-driven content-based filtering tourism recommendation engine using KNN cosine similarity and transformer embeddings (https://jembertrip.vercel.app/).
+- Jember RAG Chatbot: Local knowledge assistant with semantic search and prompt boundary controls.
+- Kakyo Lesson: EdTech LMS platform for academy progress tracking and automated billing.
+- School Attendance System: Multi-tenant automated attendance with automated WhatsApp notification integration.
+- Puskesmas Wuluhan Drug Inventory System: Healthcare inventory tracking system for municipal clinics.
+
+## Verified Credentials
+- Certified by micro1 (AI Interview): Full-Stack Development & AI/ML Systems (Aug 2026).
+- IBM SkillsBuild: Intelligent by Design: Build an AI Agent (Oct 2026, ID: ALM-COURSE_3946359).
+- IBM SkillsBuild: Introduction to Large Language Models (Oct 2026, ID: ALM-COURSE_4058915).
+- Dicoding Academy: AWS Cloud Certifications (ID: 07Z676LJJPQR).
+- Google Cloud: Google Cloud Computing & Data Analytic.
+
+## Online Presence & Contact
+- Website: https://porto-iannnub.vercel.app/
+- GitHub: https://github.com/iannnub
+- LinkedIn: https://www.linkedin.com/in/iannnub/
+- Email: iannnubb@gmail.com
