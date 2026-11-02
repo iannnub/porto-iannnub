@@ -3,32 +3,25 @@ import type { SkillCategory } from './types';
 export const skillsData: SkillCategory[] = [
   {
     category: 'Frontend',
-    skills: ['React', 'Vue.js', 'HTML/CSS', 'Tailwind CSS'],
+    skills: ['React', 'Next.js', 'TypeScript', 'Vue.js', 'Tailwind CSS', 'Framer Motion'],
   },
   {
     category: 'Backend & AI',
-    skills: [
-      'Python',
-      'PHP',
-      'Laravel',
-      'Artificial Intelligence (AI)',
-      'Natural Language Processing (NLP)',
-      'Recommender Systems',
-      'RAG',
-    ],
+    skills: ['Python', 'FastAPI', 'Laravel', 'PHP', 'RAG & LLM', 'Recommender Systems', 'REST API'],
   },
   {
-    category: 'Cloud & Tools',
-    skills: ['AWS', 'Google Cloud', 'Information Systems', 'Systems Analysis', 'API Integration'],
+    category: 'Database & Cloud',
+    skills: ['PostgreSQL', 'Supabase', 'MySQL', 'ChromaDB', 'AWS', 'Google Cloud'],
   },
   {
-    category: 'Soft Skills',
+    category: 'Product & Operations',
     skills: [
-      'Customer Support',
-      'Problem Solving',
-      'Live Chat Support',
+      'Systems Analysis',
+      'RBAC & Security',
+      'API Integration',
       'Operations Management',
-      'Digital Marketing',
+      'Problem Solving',
+      'Customer Support',
     ],
   },
 ];

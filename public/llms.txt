@@ -4,16 +4,25 @@
 > Information Systems graduate (S.Kom, GPA 3.88/4.00) with 5+ years of hands-on production engineering experience.
 
 ## Professional Summary
-- Specializes in full-stack web engineering, resilient backend systems, and applied AI/ML architectures.
-- Core Stack: TypeScript, React 19, Vite, Next.js, Node.js, Python, FastAPI, Laravel, Tailwind CSS, PostgreSQL, Vector Databases (ChromaDB, LangChain).
-- Digital Business Operations: Founder of Javapedia, managing Midtrans payment gateway integrations, automated reconciliation, and webhook reliability.
+- Specializes in full-stack web engineering, transactional backend systems, and applied AI/ML architectures.
+- Core Stack: TypeScript, React 19, Vite, Next.js 15/16, Python, FastAPI, Laravel 11, PHP 8, Tailwind CSS, Supabase PostgreSQL, MySQL, Vector Databases (ChromaDB, SBERT).
+- Digital Business Operations: Founder of Javapedia, managing payment gateway integrations, automated reconciliation, and order operations.
 
-## Key Projects
-- JemberTrip: AI-driven content-based filtering tourism recommendation engine using KNN cosine similarity and transformer embeddings (https://jembertrip.vercel.app/).
-- Jember RAG Chatbot: Local knowledge assistant with semantic search and prompt boundary controls.
-- Kakyo Lesson: EdTech LMS platform for academy progress tracking and automated billing.
-- School Attendance System: Multi-tenant automated attendance with automated WhatsApp notification integration.
-- Puskesmas Wuluhan Drug Inventory System: Healthcare inventory tracking system for municipal clinics.
+## Key Projects (14 Production & Academic Systems)
+- JemberTrip: Hybrid AI tourism recommender (k-NN Collaborative Filtering + SBERT Content-Based Filtering) for 56 destinations in Jember (https://jembertrip.vercel.app/).
+- Puput LPG: Distribution operations, 4-bucket cylinder inventory, and accounting ERP built with Next.js 15 and Supabase PostgreSQL atomic RPCs (https://puput-lpg.vercel.app/).
+- SIMPRESMA (UNEJ): Faculty student achievement management and 24-combination SKS credit conversion system built with React 18 and Laravel 11 across 5 RBAC roles.
+- Speduba E-Voting (SMPN 2 Balung): Digital student council election platform for 822 DPT voters using Next.js and PHP 8 REST API with InnoDB ACID transactions (https://evoting-smpn2balung.vercel.app/).
+- Platinum Project: Wedding decoration booking portal and vendor RAB net-margin ERP built with Next.js 16, Supabase, and Leaflet maps.
+- SIVO Puskesmas Wuluhan: Multi-unit clinical pharmacy and drug inventory system tracking 1,136+ medicine items with monthly LPLPO PDF/Excel reporting (https://sivo-wuluhan.vercel.app/).
+- KakYo Lesson: Music studio operations and LMS platform with 100m geolocation + WebRTC attendance snapshots, SPP billing, and report cards (https://kakyolesson.vercel.app/).
+- Cak Jember RAG Chatbot: Pandalungan dialect-aware RAG travel assistant powered by ChromaDB and Llama 3.3 70B on Groq API (https://jembertrip.vercel.app/rekomendasi).
+- Javapedia: Game boosting storefront and order tracking platform for Mobile Legends and PUBG Mobile.
+- SiPresensi: Multi-tenant school attendance system with automated WhatsApp parent notifications.
+- PT Antosa Arsitek MIS: Multi-role residential construction project management information system.
+- GOGO PRO: Magic Chess 8-player opponent rotation predictor with device-bound VIP verification.
+- Antrokan Waterfall: Vue.js regional e-tourism discovery portal (https://airterjun-antrokan.vercel.app/).
+- Kopi Malas Tanggul: Vue.js local coffee roastery catalog and SME showcase (https://kopi-malas-tanggul.vercel.app/).
 
 ## Verified Credentials
 - Certified by micro1 (AI Interview): Full-Stack Development & AI/ML Systems (Aug 2026).

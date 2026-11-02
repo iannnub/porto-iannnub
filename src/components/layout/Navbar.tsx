@@ -54,7 +54,9 @@ export function Navbar() {
           'pointer-events-auto relative w-full max-w-5xl rounded-full transition-all duration-300 flex items-center justify-between',
           'backdrop-blur-2xl bg-[#0A0A0F]/80 border border-white/15',
           'shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_8px_32px_rgba(0,0,0,0.5)]',
-          isScrolled ? 'py-2 px-4 sm:px-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),0_12px_36px_rgba(0,0,0,0.65)]' : 'py-2.5 px-5 sm:px-7'
+          isScrolled
+            ? 'py-2 px-4 sm:px-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),0_12px_36px_rgba(0,0,0,0.65)]'
+            : 'py-2.5 px-5 sm:px-7'
         )}
       >
         <a

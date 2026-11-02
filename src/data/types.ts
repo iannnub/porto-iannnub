@@ -31,11 +31,14 @@ export interface Experience {
   skills: string[];
 }
 
+export type ProjectCategory = 'AI & Data' | 'Enterprise & ERP' | 'Gov & EdTech' | 'Web & Consumer';
+
 export interface Project {
   id: string;
   title: string;
   date: string;
   company?: string;
+  category?: ProjectCategory;
   description: string;
   skills: string[];
   liveUrl?: string;

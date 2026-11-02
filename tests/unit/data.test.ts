@@ -16,7 +16,7 @@ describe('Data Integrity', () => {
 
   it('experienceData items have required fields', () => {
     expect(experienceData.length).toBeGreaterThan(0);
-    experienceData.forEach(exp => {
+    experienceData.forEach((exp) => {
       expect(exp.id).toBeTruthy();
       expect(exp.title).toBeTruthy();
       expect(exp.company).toBeTruthy();
@@ -25,19 +25,27 @@ describe('Data Integrity', () => {
     });
   });
 
-  it('projectsData items have required fields', () => {
-    expect(projectsData.length).toBeGreaterThan(0);
-    projectsData.forEach(project => {
+  it('projectsData items have required fields, unique IDs, screenshots, and zero em/en dashes', () => {
+    expect(projectsData.length).toBeGreaterThanOrEqual(14);
+    const seenIds = new Set<string>();
+    projectsData.forEach((project) => {
       expect(project.id).toBeTruthy();
+      expect(seenIds.has(project.id)).toBe(false);
+      seenIds.add(project.id);
       expect(project.title).toBeTruthy();
       expect(project.description).toBeTruthy();
-      expect(project.skills).toBeDefined();
+      expect(project.category).toBeTruthy();
+      expect(project.skills.length).toBeGreaterThan(0);
+      expect(project.images && project.images.length).toBeGreaterThan(0);
+      expect(project.title).not.toMatch(/[—–]/);
+      expect(project.description).not.toMatch(/[—–]/);
+      expect(project.date).not.toMatch(/[—–]/);
     });
   });
 
   it('skillsData items have required fields', () => {
-    expect(skillsData.length).toBeGreaterThan(0);
-    skillsData.forEach(category => {
+    expect(skillsData.length).toBe(4);
+    skillsData.forEach((category) => {
       expect(category.category).toBeTruthy();
       expect(category.skills.length).toBeGreaterThan(0);
     });
@@ -45,7 +53,7 @@ describe('Data Integrity', () => {
 
   it('certificationsData items have required fields', () => {
     expect(certificationsData.length).toBeGreaterThan(0);
-    certificationsData.forEach(cert => {
+    certificationsData.forEach((cert) => {
       expect(cert.id).toBeTruthy();
       expect(cert.title).toBeTruthy();
       expect(cert.issuer).toBeTruthy();
