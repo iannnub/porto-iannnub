@@ -8,6 +8,13 @@
 - Core Stack: TypeScript, React 19, Vite, Next.js 15/16, Python, FastAPI, Laravel 11, PHP 8, Tailwind CSS, Supabase PostgreSQL, MySQL, Vector Databases (ChromaDB, SBERT).
 - Digital Business Operations: Founder of Javapedia, managing payment gateway integrations, automated reconciliation, and order operations.
 
+## Work Experience
+- Technical Systems Analyst (Intern) at Wuluhan Community Health Center (Nov 2025 - Jan 2026): Designed SIVO drug inventory system tracking 1,136+ items across 9 clinical units.
+- System Solutions Intern at PT Antosa Architect (Jun 2025 - Aug 2025): Developed PHP management information system with multi-role client and revision workflows.
+- Business & Digital Support at Rachmad Handycraft (Dec 2022 - Apr 2025): E-commerce platform development, ads marketing, and workflow efficiency.
+- Founder & Developer at Javapedia (Sep 2020 - Feb 2025): Self-managed digital business, Midtrans payment gateway, automated reconciliation, and team leadership.
+- Mobile Legends Esports Coach at SMPN 2 Balung (May 2023 - Jan 2026): Led team to 1st Place at Kabupaten Jember Championship for 3 consecutive years.
+
 ## Key Projects (14 Production & Academic Systems)
 - JemberTrip: Hybrid AI tourism recommender (k-NN Collaborative Filtering + SBERT Content-Based Filtering) for 56 destinations in Jember (https://jembertrip.vercel.app/).
 - Puput LPG: Distribution operations, 4-bucket cylinder inventory, and accounting ERP built with Next.js 15 and Supabase PostgreSQL atomic RPCs (https://puput-lpg.vercel.app/).

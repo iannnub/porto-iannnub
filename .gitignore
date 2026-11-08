@@ -30,3 +30,4 @@ dist-ssr
 
 # Test artifacts
 tests/*.png
+tests/chrome-profile*

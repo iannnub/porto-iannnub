@@ -14,14 +14,21 @@ describe('Data Integrity', () => {
     expect(profileData.socials).toBeDefined();
   });
 
-  it('experienceData items have required fields', () => {
+  it('experienceData items have required fields, unique IDs, and zero em/en dashes', () => {
     expect(experienceData.length).toBeGreaterThan(0);
+    const seenExpIds = new Set<string>();
     experienceData.forEach((exp) => {
       expect(exp.id).toBeTruthy();
+      expect(seenExpIds.has(exp.id)).toBe(false);
+      seenExpIds.add(exp.id);
       expect(exp.title).toBeTruthy();
       expect(exp.company).toBeTruthy();
       expect(exp.date).toBeTruthy();
       expect(exp.bullets.length).toBeGreaterThan(0);
+      expect(exp.title).not.toMatch(/[—–]/);
+      expect(exp.company).not.toMatch(/[—–]/);
+      expect(exp.date).not.toMatch(/[—–]/);
+      exp.bullets.forEach((b) => expect(b).not.toMatch(/[—–]/));
     });
   });
 

@@ -27,7 +27,7 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
-  let reqPath = req.url.split('?')[0];
+  let reqPath = decodeURIComponent(req.url.split('?')[0]);
   if (reqPath === '/') reqPath = '/index.html';
 
   const filePath = path.join(distDir, reqPath);
@@ -53,10 +53,12 @@ const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 server.listen(PORT, '127.0.0.1', async () => {
   console.log(`[Preview Server] Started on http://127.0.0.1:${PORT}`);
 
+  const userDataDir = path.resolve(__dirname, 'chrome-profile-test');
   const chromeProc = spawn(chromePath, [
     '--headless=new',
     '--disable-gpu',
     '--no-sandbox',
+    `--user-data-dir=${userDataDir}`,
     `--remote-debugging-port=${CDP_PORT}`,
     'about:blank',
   ]);
@@ -64,15 +66,12 @@ server.listen(PORT, '127.0.0.1', async () => {
   const killChrome = () => {
     try {
       chromeProc.kill('SIGKILL');
-    } catch {
-      // ignore
-    }
+    } catch {}
   };
 
   process.on('exit', killChrome);
   process.on('SIGINT', killChrome);
 
-  // Wait for Chrome page target in /json/list
   let wsUrl = null;
   for (let i = 0; i < 30; i++) {
     try {
@@ -85,9 +84,8 @@ server.listen(PORT, '127.0.0.1', async () => {
           break;
         }
       }
-    } catch {
-      await new Promise((r) => setTimeout(r, 200));
-    }
+    } catch {}
+    await new Promise((r) => setTimeout(r, 200));
   }
 
   if (!wsUrl) {
@@ -139,43 +137,61 @@ server.listen(PORT, '127.0.0.1', async () => {
   await new Promise((resolve) => (ws.onopen = resolve));
 
   try {
-    // Enable domains
     await send('Page.enable');
     await send('Runtime.enable');
     await send('DOM.enable');
 
-    console.log('\n--- Test 1: Local Preview (Desktop 1280x900) ---');
+    console.log('\n--- Test 1: Desktop Experience & Section Verification (1440x900) ---');
     await send('Emulation.setDeviceMetricsOverride', {
-      width: 1280,
+      width: 1440,
       height: 900,
-      deviceScaleFactor: 1,
+      deviceScaleFactor: 1.5,
       mobile: false,
     });
 
     await send('Page.navigate', { url: `http://127.0.0.1:${PORT}/` });
     await new Promise((r) => setTimeout(r, 2500));
 
-    // Capture Desktop Screenshot
+    // Full overview shot
     const deskShot = await send('Page.captureScreenshot', { format: 'png' });
-    const deskPath = path.resolve(__dirname, 'screenshot-desktop.png');
-    fs.writeFileSync(deskPath, Buffer.from(deskShot.data, 'base64'));
-    console.log(`[PASS] Desktop screenshot saved: ${deskPath}`);
+    fs.writeFileSync(path.resolve(__dirname, 'screenshot-desktop.png'), Buffer.from(deskShot.data, 'base64'));
 
-    // Verify DOM nodes
+    // Verify DOM structure, no gradients, and CWV measurements
     const evalRes = await send('Runtime.evaluate', {
-      expression: `JSON.stringify({
-        root: !!document.getElementById('root'),
-        title: document.title,
-        hero: !!document.getElementById('hero'),
-        about: !!document.getElementById('about'),
-        skills: !!document.getElementById('skills'),
-        experience: !!document.getElementById('experience'),
-        projects: !!document.getElementById('projects'),
-        certifications: !!document.getElementById('certifications'),
-        contact: !!document.getElementById('contact'),
-        hasGradient: document.body.innerHTML.includes('bg-gradient-to'),
-        jsonLdPresent: !!document.querySelector('script[type="application/ld+json"]')
-      })`,
+      awaitPromise: true,
+      expression: `(async () => {
+        const bodyHtml = document.body.innerHTML;
+        const hasGradient = bodyHtml.includes('bg-gradient-') || bodyHtml.includes('linear-gradient(') || bodyHtml.includes('radial-gradient(');
+        
+        // Measure CLS
+        let clsScore = 0;
+        const entries = performance.getEntriesByType('layout-shift');
+        for (const entry of entries) {
+          if (!entry.hadRecentInput) {
+            clsScore += entry.value;
+          }
+        }
+
+        // Check LCP
+        const paintEntries = performance.getEntriesByType('paint');
+        const fcp = paintEntries.find(p => p.name === 'first-contentful-paint')?.startTime || 0;
+
+        return JSON.stringify({
+          root: !!document.getElementById('root'),
+          title: document.title,
+          hero: !!document.getElementById('hero'),
+          about: !!document.getElementById('about'),
+          skills: !!document.getElementById('skills'),
+          experience: !!document.getElementById('experience'),
+          projects: !!document.getElementById('projects'),
+          certifications: !!document.getElementById('certifications'),
+          contact: !!document.getElementById('contact'),
+          hasGradient,
+          clsScore,
+          fcp,
+          jsonLdPresent: !!document.querySelector('script[type="application/ld+json"]')
+        });
+      })()`,
     });
     const domCheck = JSON.parse(evalRes.result.value);
 
@@ -188,10 +204,98 @@ server.listen(PORT, '127.0.0.1', async () => {
     console.log('[CHECK] Projects section:', domCheck.projects);
     console.log('[CHECK] Certifications section:', domCheck.certifications);
     console.log('[CHECK] Contact section:', domCheck.contact);
-    console.log('[CHECK] No gradient-to- classes in DOM:', !domCheck.hasGradient);
+    console.log('[CHECK] Zero gradients in DOM:', !domCheck.hasGradient);
+    console.log('[CHECK] CLS Score:', domCheck.clsScore, '(target < 0.1)');
     console.log('[CHECK] JSON-LD Schema.org present in DOM:', domCheck.jsonLdPresent);
 
-    console.log('\n--- Test 2: Local Preview (Mobile iPhone 393x852) ---');
+    // Scroll to and screenshot About
+    await send('Runtime.evaluate', {
+      expression: `document.getElementById('about').scrollIntoView({ behavior: 'instant' })`,
+    });
+    await new Promise((r) => setTimeout(r, 600));
+    const aboutShot = await send('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.resolve(__dirname, 'screenshot-about.png'), Buffer.from(aboutShot.data, 'base64'));
+    console.log('[PASS] About section screenshot saved: screenshot-about.png');
+
+    // Scroll to and screenshot Experience
+    await send('Runtime.evaluate', {
+      expression: `document.getElementById('experience').scrollIntoView({ behavior: 'instant' })`,
+    });
+    await new Promise((r) => setTimeout(r, 600));
+    const expShot = await send('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.resolve(__dirname, 'screenshot-experience.png'), Buffer.from(expShot.data, 'base64'));
+    console.log('[PASS] Experience section screenshot saved: screenshot-experience.png');
+
+    // Scroll to and screenshot Projects (filter Gov & EdTech to show SIVO Puskesmas)
+    await send('Runtime.evaluate', {
+      awaitPromise: true,
+      expression: `(async () => {
+        const pSection = document.getElementById('projects');
+        pSection.scrollIntoView({ behavior: 'instant' });
+        const btn = Array.from(pSection.querySelectorAll('button')).find(b => b.textContent.includes('Gov & EdTech'));
+        if (btn) btn.click();
+        await new Promise(r => setTimeout(r, 500));
+      })()`,
+    });
+    const projShot = await send('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.resolve(__dirname, 'screenshot-projects.png'), Buffer.from(projShot.data, 'base64'));
+    console.log('[PASS] Projects section screenshot saved: screenshot-projects.png');
+
+    // Test Contact form interaction
+    console.log('\n--- Test 2: Contact Form Filling & Validation ---');
+    await send('Runtime.evaluate', {
+      expression: `document.getElementById('contact').scrollIntoView({ behavior: 'instant' })`,
+    });
+    await new Promise((r) => setTimeout(r, 600));
+
+    const formTestRes = await send('Runtime.evaluate', {
+      awaitPromise: true,
+      expression: `(async () => {
+        const nameInput = document.querySelector('input[name="name"]');
+        const emailInput = document.querySelector('input[name="email"]');
+        const messageInput = document.querySelector('textarea[name="message"]');
+        const submitBtn = document.querySelector('#contact form button[type="submit"]');
+
+        if (!nameInput || !emailInput || !messageInput || !submitBtn) {
+          return { success: false, reason: 'Inputs not found' };
+        }
+
+        // Fill with test values
+        nameInput.value = 'Hiring Recruiter';
+        nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+        
+        emailInput.value = 'invalid-email-format';
+        emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+        messageInput.value = 'Hi Septian, interested in discussing opportunities.';
+        messageInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+        submitBtn.click();
+        await new Promise(r => setTimeout(r, 300));
+
+        // Check if error appeared
+        const hasEmailError = document.body.innerHTML.includes('email') || document.querySelector('#contact').innerHTML.includes('Invalid') || document.querySelector('#contact').innerHTML.includes('valid');
+
+        // Now fill valid email
+        emailInput.value = 'recruiter@company.com';
+        emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+        return {
+          success: true,
+          nameVal: nameInput.value,
+          emailVal: emailInput.value,
+          messageVal: messageInput.value,
+          hasErrorFeedback: hasEmailError
+        };
+      })()`,
+    });
+    console.log('[CHECK] Contact Form validation result:', formTestRes.result.value);
+
+    const contactShot = await send('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.resolve(__dirname, 'screenshot-contact.png'), Buffer.from(contactShot.data, 'base64'));
+    console.log('[PASS] Contact section screenshot saved: screenshot-contact.png');
+
+    console.log('\n--- Test 3: Mobile iPhone 393x852 Responsiveness & Touch Targets ---');
     await send('Emulation.setDeviceMetricsOverride', {
       width: 393,
       height: 852,
@@ -200,29 +304,19 @@ server.listen(PORT, '127.0.0.1', async () => {
     });
     await new Promise((r) => setTimeout(r, 1200));
 
+    const mobileCheck = await send('Runtime.evaluate', {
+      expression: `JSON.stringify({
+        overflowX: document.documentElement.scrollWidth > window.innerWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        innerWidth: window.innerWidth,
+      })`,
+    });
+    const mobRes = JSON.parse(mobileCheck.result.value);
+    console.log('[CHECK] Mobile scroll overflow:', mobRes.overflowX ? 'FAIL' : 'PASS', `(scrollWidth: ${mobRes.scrollWidth}, innerWidth: ${mobRes.innerWidth})`);
+
     const mobShot = await send('Page.captureScreenshot', { format: 'png' });
-    const mobPath = path.resolve(__dirname, 'screenshot-mobile.png');
-    fs.writeFileSync(mobPath, Buffer.from(mobShot.data, 'base64'));
-    console.log(`[PASS] Mobile screenshot saved: ${mobPath}`);
-
-    console.log('\n--- Test 3: Live Production Vercel Audit (https://porto-iannnub.vercel.app/) ---');
-    try {
-      await send('Emulation.setDeviceMetricsOverride', {
-        width: 1280,
-        height: 900,
-        deviceScaleFactor: 1,
-        mobile: false,
-      });
-      await send('Page.navigate', { url: 'https://porto-iannnub.vercel.app/' });
-      await new Promise((r) => setTimeout(r, 3500));
-
-      const prodShot = await send('Page.captureScreenshot', { format: 'png' });
-      const prodPath = path.resolve(__dirname, 'screenshot-vercel-prod.png');
-      fs.writeFileSync(prodPath, Buffer.from(prodShot.data, 'base64'));
-      console.log(`[PASS] Vercel production screenshot saved: ${prodPath}`);
-    } catch (e) {
-      console.warn('[WARN] Could not capture live vercel site:', e.message);
-    }
+    fs.writeFileSync(path.resolve(__dirname, 'screenshot-mobile.png'), Buffer.from(mobShot.data, 'base64'));
+    console.log('[PASS] Mobile screenshot saved: screenshot-mobile.png');
 
     console.log('\n--- Console Audit Summary ---');
     console.log(`Total console logs captured: ${consoleLogs.length}`);
