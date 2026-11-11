@@ -141,6 +141,7 @@ export const projectsData: Project[] = [
       '/projects/kakyo-lesson/3.png',
       '/projects/kakyo-lesson/4.png',
       '/projects/kakyo-lesson/5.png',
+      '/projects/kakyo-lesson/6.png',
     ],
   },
   {
