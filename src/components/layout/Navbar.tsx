@@ -4,6 +4,7 @@ import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
 import { profileData } from '@/data/profile';
+import { openDocumentViewer } from '@/lib/documentEvents';
 
 const NAV_LINKS = [
   { name: 'About', href: '#about' },
@@ -95,18 +96,17 @@ export function Navbar() {
             })}
           </ul>
 
-          {profileData.socials.resume && (
-            <motion.a
-              href={profileData.socials.resume}
-              target="_blank"
-              rel="noopener noreferrer"
+          {(profileData.socials.resume || profileData.socials.portfolioPdf) && (
+            <motion.button
+              type="button"
+              onClick={() => openDocumentViewer('cv')}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.94 }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               className="ml-3 inline-flex items-center justify-center rounded-full font-sans font-medium bg-accent-red text-white hover:bg-red-600 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_16px_rgba(224,40,46,0.45)] px-3.5 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
             >
-              Download CV
-            </motion.a>
+              CV &amp; Portfolio
+            </motion.button>
           )}
         </nav>
 
@@ -152,16 +152,33 @@ export function Navbar() {
                     </a>
                   );
                 })}
-                {profileData.socials.resume && (
-                  <a
-                    href={profileData.socials.resume}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center rounded-full font-sans font-medium bg-accent-red text-white hover:bg-red-600 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_16px_rgba(224,40,46,0.4)] px-4 py-2.5 text-base mt-2 w-full min-h-[44px] active:scale-95 transition-transform"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Download CV
-                  </a>
+                {(profileData.socials.resume || profileData.socials.portfolioPdf) && (
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {profileData.socials.resume && (
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center rounded-full font-sans font-medium bg-accent-red text-white hover:bg-red-600 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_16px_rgba(224,40,46,0.4)] px-4 py-2.5 text-sm w-full min-h-[44px] active:scale-95 transition-transform"
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          openDocumentViewer('cv');
+                        }}
+                      >
+                        View CV
+                      </button>
+                    )}
+                    {profileData.socials.portfolioPdf && (
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center rounded-full font-sans font-medium bg-white/10 text-white hover:bg-white/15 border border-white/20 px-4 py-2.5 text-sm w-full min-h-[44px] active:scale-95 transition-transform"
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          openDocumentViewer('portfolio');
+                        }}
+                      >
+                        Portfolio PDF
+                      </button>
+                    )}
+                  </div>
                 )}
               </nav>
             </motion.div>

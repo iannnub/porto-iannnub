@@ -241,6 +241,56 @@ server.listen(PORT, '127.0.0.1', async () => {
     fs.writeFileSync(path.resolve(__dirname, 'screenshot-projects.png'), Buffer.from(projShot.data, 'base64'));
     console.log('[PASS] Projects section screenshot saved: screenshot-projects.png');
 
+    // Test Document Viewer Modal (CV + Portfolio Deck PDF)
+    console.log('\n--- Test 1B: Document Viewer Modal (CV & Portfolio PDF) ---');
+    const docModalRes = await send('Runtime.evaluate', {
+      awaitPromise: true,
+      expression: `(async () => {
+        const portfolioBtn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Preview Portfolio (PDF)'));
+        if (!portfolioBtn) return JSON.stringify({ opened: false, reason: 'Preview Portfolio button not found' });
+        portfolioBtn.click();
+        await new Promise(r => setTimeout(r, 700));
+
+        const dialog = document.querySelector('[role="dialog"]');
+        const obj = dialog?.querySelector('object[type="application/pdf"]');
+        const firstData = obj?.getAttribute('data') || '';
+
+        const cvTab = Array.from(dialog?.querySelectorAll('[role="tab"]') || []).find(t => t.textContent.includes('Curriculum Vitae') || t.textContent.includes('CV'));
+        if (cvTab) cvTab.click();
+        await new Promise(r => setTimeout(r, 600));
+
+        const secondData = dialog?.querySelector('object[type="application/pdf"]')?.getAttribute('data') || '';
+        return JSON.stringify({
+          opened: !!dialog,
+          portfolioLoaded: firstData.includes('SeptianPutraRachmanHakim_Portfolio_Academy.pdf'),
+          cvLoaded: secondData.includes('SeptianPutraRachmanHakim_CV_Academy.pdf'),
+          firstData,
+          secondData
+        });
+      })()`,
+    });
+    const docCheck = JSON.parse(docModalRes.result.value);
+    console.log('[CHECK] Document Modal opened:', docCheck.opened);
+    console.log('[CHECK] Portfolio PDF loaded:', docCheck.portfolioLoaded, `(${docCheck.firstData})`);
+    console.log('[CHECK] CV PDF switched & loaded:', docCheck.cvLoaded, `(${docCheck.secondData})`);
+    if (!docCheck.opened || !docCheck.portfolioLoaded || !docCheck.cvLoaded) {
+      throw new Error('Document Viewer Modal check failed');
+    }
+
+    const docShot = await send('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.resolve(__dirname, 'screenshot-doc-modal.png'), Buffer.from(docShot.data, 'base64'));
+    console.log('[PASS] Document Viewer Modal screenshot saved: screenshot-doc-modal.png');
+
+    // Close the modal before continuing
+    await send('Runtime.evaluate', {
+      awaitPromise: true,
+      expression: `(async () => {
+        const closeBtn = document.querySelector('[aria-label="Close document viewer"]');
+        if (closeBtn) closeBtn.click();
+        await new Promise(r => setTimeout(r, 400));
+      })()`,
+    });
+
     // Test Contact form interaction
     console.log('\n--- Test 2: Contact Form Filling & Validation ---');
     await send('Runtime.evaluate', {

@@ -16,6 +16,7 @@ export interface Profile {
     email: string | null;
     phone: string | null;
     resume: string | null;
+    portfolioPdf: string | null;
     instagram: string | null;
   };
 }

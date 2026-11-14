@@ -23,6 +23,7 @@ export const profileData: Profile = {
     email: 'iannnubb@gmail.com',
     phone: '+6282132167400',
     resume: '/assets/cv/SeptianPutraRachmanHakim_CV_Academy.pdf',
+    portfolioPdf: '/assets/cv/SeptianPutraRachmanHakim_Portfolio_Academy.pdf',
     instagram: 'https://www.instagram.com/iannnub/',
   },
 };

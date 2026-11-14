@@ -5,7 +5,9 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import type { Project, ProjectCategory } from '@/data/types';
 import { projectsData } from '@/data/projects';
-import { ExternalLink, Camera } from 'lucide-react';
+import { profileData } from '@/data/profile';
+import { openDocumentViewer } from '@/lib/documentEvents';
+import { ExternalLink, Camera, FolderOpen, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProjectGalleryModal } from '@/components/ui/ProjectGalleryModal';
 import { cn } from '@/lib/utils';
@@ -53,7 +55,7 @@ export function Projects() {
       />
 
       {/* iPhone Liquid Glass Segmented Category Filter */}
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center mb-4">
         <div
           role="group"
           aria-label="Filter projects by category"
@@ -95,6 +97,36 @@ export function Projects() {
           })}
         </div>
       </div>
+
+      {/* Portfolio PDF Deck Quick Access Bar */}
+      {profileData.socials.portfolioPdf && (
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+          <div className="inline-flex flex-wrap items-center justify-center gap-3 px-4 py-2 rounded-2xl backdrop-blur-2xl bg-[#0A0A0F]/80 border border-white/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.14),0_6px_20px_rgba(0,0,0,0.35)]">
+            <span className="font-sans text-xs sm:text-sm text-secondary flex items-center gap-2">
+              <FolderOpen size={16} className="text-accent-blue shrink-0" />
+              <span>Want the complete slide-deck overview?</span>
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => openDocumentViewer('portfolio')}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[40px] rounded-full text-xs sm:text-sm font-medium bg-accent-blue hover:bg-blue-600 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue active:scale-95"
+              >
+                <span>Preview Portfolio (PDF)</span>
+              </button>
+              <a
+                href={profileData.socials.portfolioPdf}
+                download="SeptianPutraRachmanHakim_Portfolio_Academy.pdf"
+                aria-label="Download Portfolio Academy PDF"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[40px] rounded-full text-xs sm:text-sm font-medium bg-white/5 hover:bg-white/10 text-white border border-white/15 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+              >
+                <Download size={14} />
+                <span>Download</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Grid */}
       <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

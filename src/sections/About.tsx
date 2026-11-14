@@ -2,7 +2,8 @@ import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { profileData } from '@/data/profile';
 import { Card } from '@/components/ui/Card';
-import { Mail, MapPin, FileText } from 'lucide-react';
+import { openDocumentViewer } from '@/lib/documentEvents';
+import { Mail, MapPin, FileText, FolderOpen, Download } from 'lucide-react';
 
 export function About() {
   return (
@@ -32,15 +33,44 @@ export function About() {
                 </a>
               </div>
               {profileData.socials.resume && (
-                <div className="flex items-center gap-3">
-                  <FileText size={18} className="text-accent-red" />
+                <div className="flex flex-wrap items-center gap-3">
+                  <FileText size={18} className="text-accent-red shrink-0" />
+                  <button
+                    type="button"
+                    onClick={() => openDocumentViewer('cv')}
+                    className="hover:text-accent-blue transition-colors underline-offset-4 hover:underline text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded"
+                  >
+                    Preview CV (PDF)
+                  </button>
                   <a
                     href={profileData.socials.resume}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-accent-blue transition-colors underline-offset-4 hover:underline"
+                    download="SeptianPutraRachmanHakim_CV_Academy.pdf"
+                    aria-label="Download CV PDF"
+                    className="inline-flex items-center gap-1 font-mono text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-secondary hover:text-white hover:border-accent-blue/50 transition-colors"
                   >
-                    Download CV (PDF)
+                    <Download size={12} />
+                    <span>Save</span>
+                  </a>
+                </div>
+              )}
+              {profileData.socials.portfolioPdf && (
+                <div className="flex flex-wrap items-center gap-3">
+                  <FolderOpen size={18} className="text-accent-red shrink-0" />
+                  <button
+                    type="button"
+                    onClick={() => openDocumentViewer('portfolio')}
+                    className="hover:text-accent-blue transition-colors underline-offset-4 hover:underline text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded"
+                  >
+                    Preview Portfolio Deck (PDF)
+                  </button>
+                  <a
+                    href={profileData.socials.portfolioPdf}
+                    download="SeptianPutraRachmanHakim_Portfolio_Academy.pdf"
+                    aria-label="Download Portfolio Deck PDF"
+                    className="inline-flex items-center gap-1 font-mono text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-secondary hover:text-white hover:border-accent-blue/50 transition-colors"
+                  >
+                    <Download size={12} />
+                    <span>Save</span>
                   </a>
                 </div>
               )}

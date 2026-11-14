@@ -39,12 +39,19 @@ describe('Public Assets Integrity Check', () => {
     });
   });
 
-  it('profile resume CV exists on disk', () => {
+  it('profile resume CV and portfolio PDF exist on disk', () => {
     if (profileData.socials.resume) {
       const relativePath = profileData.socials.resume.replace(/^\//, '');
       const fullPath = path.join(publicDir, relativePath);
       const exists = fs.existsSync(fullPath);
       expect(exists, `CV file missing: ${profileData.socials.resume}`).toBe(true);
+    }
+    expect(profileData.socials.portfolioPdf).toBeTruthy();
+    if (profileData.socials.portfolioPdf) {
+      const relativePath = profileData.socials.portfolioPdf.replace(/^\//, '');
+      const fullPath = path.join(publicDir, relativePath);
+      const exists = fs.existsSync(fullPath);
+      expect(exists, `Portfolio PDF missing: ${profileData.socials.portfolioPdf}`).toBe(true);
     }
   });
 

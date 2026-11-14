@@ -3,6 +3,7 @@ import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { Button } from '@/components/ui/Button';
 import { profileData } from '@/data/profile';
 import { triggerEngineStart } from '@/lib/engineEvents';
+import { openDocumentViewer } from '@/lib/documentEvents';
 import { motion } from 'framer-motion';
 
 export function Hero() {
@@ -62,7 +63,7 @@ export function Hero() {
           {profileData.about[3]}
         </p>
 
-        <div className="flex flex-wrap gap-4 mt-6">
+        <div className="flex flex-wrap gap-3 mt-6">
           <Button
             variant="primary"
             onClick={() =>
@@ -72,14 +73,14 @@ export function Hero() {
             View Projects
           </Button>
           {profileData.socials.resume && (
-            <a
-              href={profileData.socials.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button variant="outline">Download CV</Button>
-            </a>
+            <Button variant="outline" onClick={() => openDocumentViewer('cv')}>
+              View CV
+            </Button>
+          )}
+          {profileData.socials.portfolioPdf && (
+            <Button variant="outline" onClick={() => openDocumentViewer('portfolio')}>
+              Portfolio PDF
+            </Button>
           )}
           <Button
             variant="outline"
