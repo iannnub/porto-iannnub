@@ -47,7 +47,7 @@ const server = http.createServer((req, res) => {
 });
 
 const PORT = 4173;
-const CDP_PORT = 9222;
+const CDP_PORT = Number(process.env.CDP_PORT) || 9229;
 const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 
 server.listen(PORT, '127.0.0.1', async () => {
