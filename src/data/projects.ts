@@ -54,8 +54,15 @@ export const projectsData: Project[] = [
     company: 'Universitas Jember (UNEJ)',
     category: 'Gov & EdTech',
     description:
-      'Faculty-level student achievement management and SKS course credit conversion platform supporting 5 roles (Student, Study Program Verifier, Academic Staff, Vice Dean, Super Admin). Built with a 4-step submission wizard, 24-combination SKS conversion matrix, Telegram bot notifications, and role audit trails.',
-    skills: ['React 18', 'TypeScript', 'Laravel 11', 'PHP 8.2', 'MySQL', 'Sanctum RBAC'],
+      'Faculty-level student achievement management and SKS course credit conversion platform supporting 5 roles (Student, Verifier, Academic Staff, Vice Dean, Super Admin). Built with a 4-step submission wizard, 24-combination SKS conversion matrix, GAPURA OAuth 2.0 / OIDC SSO login client, Telegram bot notifications, role audit trails, and automated test coverage (82 PHPUnit and 23 Vitest tests).',
+    skills: [
+      'React 18',
+      'TypeScript',
+      'Laravel 12',
+      'OAuth 2.0 / OIDC',
+      'MySQL',
+      'PHPUnit & Vitest',
+    ],
     tags: [],
     images: [
       '/projects/simpresma/2.png',
@@ -94,7 +101,8 @@ export const projectsData: Project[] = [
     category: 'Enterprise & ERP',
     description:
       'Booking portal and back-office operations platform for a wedding and event decoration vendor offering 13 curated packages. Enforces H+7 event lead times, locked Rp 1,000,000 down-payment commitments, automated booking codes, OpenStreetMap venue pinpointing, WhatsApp admin routing, and project RAB net-margin tracking.',
-    skills: ['Next.js 16', 'React 19', 'TypeScript', 'Supabase', 'Leaflet Maps', 'Zod'],
+    skills: ['Next.js 16', 'React 19', 'TypeScript', 'Laravel 12', 'Supabase', 'Leaflet Maps'],
+    liveUrl: 'https://platinumproject.vercel.app/',
     tags: [],
     images: [
       '/projects/platinum-project/1.png',
@@ -112,7 +120,7 @@ export const projectsData: Project[] = [
     category: 'Gov & EdTech',
     description:
       'Clinical pharmacy and medicine inventory system tracking 1,136+ drug items across 12 staff accounts at Puskesmas Wuluhan. Manages central warehouse intake, inter-unit stock transfers (Warehouse, Pharmacy, ER, Polyclinics), patient prescription dispensing, stock opname audits, and monthly LPLPO PDF and Excel reports.',
-    skills: ['PHP 8 (PDO)', 'MySQL', 'Bootstrap 4', 'DataTables', 'TCPDF', 'PhpSpreadsheet'],
+    skills: ['PHP 8 (PDO)', 'MySQL/MariaDB', 'Bootstrap 4', 'jQuery', 'DataTables', 'Select2'],
     liveUrl: 'https://sivo-wuluhan.vercel.app/',
     tags: ['Healthcare System'],
     images: [

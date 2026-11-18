@@ -82,4 +82,25 @@ export const certificationsData: Certification[] = [
     skills: ['Web Development'],
     image: '/dilesin.jpg',
   },
+  {
+    id: 'ptma-esport-2024',
+    title: 'Lomba E-Sport Nasional PTMA 2024',
+    issuer: 'Puspresma PTMA & Universitas Muhammadiyah Surakarta',
+    date: 'Dec 2024',
+    credentialId: '0189/Pusprema PTMA/XII/2024',
+    skills: ['National Esports Competition', 'Teamwork', 'Strategic Planning'],
+    file: '/ptma-esport-2024.jpg',
+    image: '/ptma-esport-2024.jpg',
+  },
+  {
+    id: 'pomprov-jatim-2023',
+    title:
+      'Pekan Olahraga Mahasiswa Provinsi Jawa Timur II (POMPROV JATIM II) - Cabang Olahraga E-Sport',
+    issuer: 'BAPOMI Jawa Timur',
+    date: 'Jul 2023',
+    credentialId: '037/BAPOMI/JTM/VII/2023',
+    skills: ['Esports Competition', 'Team Strategy', 'University Representative'],
+    file: '/pomprov-jatim-2023.pdf',
+    image: '/pomprov-jatim-2023.jpg',
+  },
 ];

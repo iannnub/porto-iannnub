@@ -6,10 +6,10 @@ export const profileData: Profile = {
   headline: ['Full-Stack Developer', 'AI/ML Systems', 'Software Engineer'],
   location: 'Jember, East Java, Indonesia',
   about: [
-    'Information Systems graduate (S.Kom, GPA 3.88/4.00) specializing in full-stack development and applied AI/ML, with 5+ years of hands-on experience building production-grade systems end-to-end: from database architecture and backend APIs to frontend interfaces and cloud deployment.',
-    'Independently designed and built multiple full-stack platforms as sole developer, including a multi-tenant SaaS attendance system, an academic faculty management platform with custom RBAC, and an AI-integrated tourism platform combining a hybrid recommendation engine with a multilingual RAG chatbot (1,500+ users).',
-    "Brings a founder's perspective from building and managing Javapedia, a self-managed digital business, for over 4 years: leading staff, integrating payment gateways (Midtrans), automating financial reconciliation, and overseeing end-to-end platform operations.",
-    'Comfortable across the modern web stack (Laravel, React, Next.js, FastAPI) and AI tooling (LangChain, RAG, vector databases), with a strong bias toward shipping reliable, well-documented, production-ready software.',
+    'Information Systems graduate (S.Kom, GPA 3.88/4.00) specializing in full-stack development and applied AI/ML, with 3+ years of hands-on software development and 4+ years running a digital business.',
+    'Delivered production client and institutional systems including KakYo Lesson (music studio management with GPS-geofenced attendance in daily use since mid-2026), Puput LPG (distribution and accounting ERP with Supabase PostgreSQL RLS and atomic RPC row-locking), Speduba E-Voting (used by 822 registered voters), SIMPRESMA, SIM Presensi Siswa, and JemberTrip (hybrid recommender and RAG chatbot with 1,500+ users).',
+    "Brings a founder's perspective from building and running Javapedia for over 4 years: processing approximately 30 orders per day, integrating Midtrans payment gateway with automated financial reconciliation, and leading a team of 6 service staff.",
+    'Comfortable across the modern web stack (Laravel, React, Next.js, TypeScript, FastAPI, PostgreSQL) and AI tooling (LangChain, RAG, ChromaDB), with a strong focus on reliability: role-based access control, atomic database transactions, and automated testing.',
   ],
   stats: {
     experience: '5+ years experience',
