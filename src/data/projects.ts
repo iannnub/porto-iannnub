@@ -48,6 +48,26 @@ export const projectsData: Project[] = [
     ],
   },
   {
+    id: 'rme-oka',
+    title: 'RME OKA: Operating Room Nursing Electronic Medical Record',
+    date: 'Nov 2026',
+    company: 'RSU Universitas Muhammadiyah Jember (SKPL Fikes)',
+    category: 'Gov & EdTech',
+    description:
+      'Perioperative nursing Electronic Medical Record (EHR) platform covering Pre-Op (20 SDKI/SLKI/SIKI diagnoses), Surgical Preparation, WHO Surgical Safety Checklist (Sign In, Time Out, Sign Out), Intra-Op vital-sign SVG trend charts and 5-item instrument counts, Post-Op observation, 12-item permanent handover snapshots, and hospital-headed DomPDF exports. Enforces 5 RBAC roles, sequential 6-stage status gating, optimistic concurrency locking, global Spatie Activitylog auditing, and 86 Pest tests (1,368 assertions).',
+    skills: ['Laravel 12', 'Inertia.js', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'MySQL'],
+    tags: ['Healthcare System'],
+    images: [
+      '/projects/rme-oka/1.png',
+      '/projects/rme-oka/2.png',
+      '/projects/rme-oka/3.png',
+      '/projects/rme-oka/4.png',
+      '/projects/rme-oka/5.png',
+      '/projects/rme-oka/6.png',
+      '/projects/rme-oka/7.png',
+    ],
+  },
+  {
     id: 'simpresma',
     title: 'SIMPRESMA: Student Achievement & SKS Conversion System',
     date: '2026',
