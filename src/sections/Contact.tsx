@@ -171,8 +171,8 @@ export function Contact() {
         </div>
 
         <div className="w-full md:w-2/3">
-          <Card className="p-8 md:p-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
-            <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-8">
+          <Card className="p-6 sm:p-8 md:p-10 bg-[#12121A]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
+            <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
               {/* Honeypot field for bot protection */}
               <input
                 type="text"
@@ -183,87 +183,89 @@ export function Contact() {
                 aria-hidden="true"
               />
 
-              <div className="flex flex-col md:flex-row gap-8">
-                <div className="relative z-0 w-full group">
-                  <input
-                    id="name"
-                    type="text"
-                    placeholder=" "
-                    maxLength={80}
-                    aria-invalid={Boolean(errors.name)}
-                    aria-describedby={errors.name ? 'name-error' : undefined}
-                    {...register('name')}
-                    className="block py-3 px-0 w-full text-lg text-primary bg-transparent border-0 border-b-2 border-accent-line appearance-none focus:outline-none focus:ring-0 focus:border-accent-blue-glow peer font-sans transition-colors"
-                  />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-2">
                   <label
                     htmlFor="name"
-                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue-glow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
+                    className="font-sans text-sm font-medium text-primary tracking-wide"
                   >
                     Name
                   </label>
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="Your name"
+                    maxLength={80}
+                    autoComplete="name"
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={errors.name ? 'name-error' : undefined}
+                    {...register('name')}
+                    className={`w-full min-h-[48px] px-4 py-3 rounded-xl bg-[#0A0A0F] text-base text-primary placeholder:text-secondary/50 border transition-colors font-sans focus:outline-none focus:ring-2 ${
+                      errors.name
+                        ? 'border-accent-red-glow focus:border-accent-red-glow focus:ring-accent-red/30'
+                        : 'border-white/15 hover:border-white/25 focus:border-accent-blue-glow focus:ring-accent-blue/30'
+                    }`}
+                  />
                   {errors.name && (
-                    <span
-                      id="name-error"
-                      role="alert"
-                      className="text-accent-red-glow text-xs absolute -bottom-5"
-                    >
+                    <span id="name-error" role="alert" className="text-accent-red-glow text-xs">
                       {errors.name.message}
                     </span>
                   )}
                 </div>
 
-                <div className="relative z-0 w-full group">
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder=" "
-                    maxLength={120}
-                    aria-invalid={Boolean(errors.email)}
-                    aria-describedby={errors.email ? 'email-error' : undefined}
-                    {...register('email')}
-                    className="block py-3 px-0 w-full text-lg text-primary bg-transparent border-0 border-b-2 border-accent-line appearance-none focus:outline-none focus:ring-0 focus:border-accent-blue-glow peer font-sans transition-colors"
-                  />
+                <div className="flex flex-col gap-2">
                   <label
                     htmlFor="email"
-                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue-glow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
+                    className="font-sans text-sm font-medium text-primary tracking-wide"
                   >
                     Email
                   </label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    maxLength={120}
+                    autoComplete="email"
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={errors.email ? 'email-error' : undefined}
+                    {...register('email')}
+                    className={`w-full min-h-[48px] px-4 py-3 rounded-xl bg-[#0A0A0F] text-base text-primary placeholder:text-secondary/50 border transition-colors font-sans focus:outline-none focus:ring-2 ${
+                      errors.email
+                        ? 'border-accent-red-glow focus:border-accent-red-glow focus:ring-accent-red/30'
+                        : 'border-white/15 hover:border-white/25 focus:border-accent-blue-glow focus:ring-accent-blue/30'
+                    }`}
+                  />
                   {errors.email && (
-                    <span
-                      id="email-error"
-                      role="alert"
-                      className="text-accent-red-glow text-xs absolute -bottom-5"
-                    >
+                    <span id="email-error" role="alert" className="text-accent-red-glow text-xs">
                       {errors.email.message}
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="relative z-0 w-full group mt-4">
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="message"
+                  className="font-sans text-sm font-medium text-primary tracking-wide"
+                >
+                  Message
+                </label>
                 <textarea
                   id="message"
-                  placeholder=" "
+                  placeholder="Write your message here..."
                   maxLength={2000}
                   aria-invalid={Boolean(errors.message)}
                   aria-describedby={errors.message ? 'message-error' : undefined}
                   {...register('message')}
                   rows={4}
-                  className="block py-3 px-0 w-full text-lg text-primary bg-transparent border-0 border-b-2 border-accent-line appearance-none focus:outline-none focus:ring-0 focus:border-accent-blue-glow peer font-sans transition-colors resize-none"
+                  className={`w-full px-4 py-3 rounded-xl bg-[#0A0A0F] text-base text-primary placeholder:text-secondary/50 border transition-colors font-sans resize-y focus:outline-none focus:ring-2 ${
+                    errors.message
+                      ? 'border-accent-red-glow focus:border-accent-red-glow focus:ring-accent-red/30'
+                      : 'border-white/15 hover:border-white/25 focus:border-accent-blue-glow focus:ring-accent-blue/30'
+                  }`}
                 />
-                <label
-                  htmlFor="message"
-                  className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue-glow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
-                >
-                  Message
-                </label>
                 {errors.message && (
-                  <span
-                    id="message-error"
-                    role="alert"
-                    className="text-accent-red-glow text-xs absolute -bottom-5"
-                  >
+                  <span id="message-error" role="alert" className="text-accent-red-glow text-xs">
                     {errors.message.message}
                   </span>
                 )}
@@ -271,10 +273,16 @@ export function Contact() {
 
               <Button
                 type="submit"
-                variant="primary"
+                variant={status === 'loading' ? 'secondary' : 'primary'}
                 size="lg"
                 disabled={status === 'loading' || cooldown}
-                className="w-full mt-4 font-bold tracking-wider min-h-[48px]"
+                className={`w-full mt-2 font-semibold tracking-wider min-h-[50px] rounded-xl shadow-none ${
+                  status === 'success'
+                    ? 'bg-emerald-600 hover:bg-emerald-600 text-white border border-emerald-400/30 disabled:opacity-100'
+                    : status === 'loading'
+                      ? 'disabled:opacity-90'
+                      : 'bg-accent-red hover:bg-[#c81e24] text-white border border-white/10'
+                }`}
                 aria-live="polite"
               >
                 {status === 'loading' && (

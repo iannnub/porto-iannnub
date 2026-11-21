@@ -336,7 +336,31 @@ server.listen(PORT, '127.0.0.1', async () => {
         const hasEmailError = !!emailErrEl && emailErrEl.textContent.toLowerCase().includes('invalid');
         const ariaInvalid = emailInput.getAttribute('aria-invalid') === 'true';
 
-        // 2. Fix email and verify real submission dispatch to FormSubmit / EmailJS
+        setNativeValue(emailInput, 'recruiter@company.com');
+        await new Promise(r => setTimeout(r, 150));
+
+        return JSON.stringify({
+          success: true,
+          hasErrorFeedback: hasEmailError,
+          ariaInvalid
+        });
+      })()`,
+    });
+    const preSubmitCheck = JSON.parse(formTestRes.result.value);
+    if (!preSubmitCheck.success || !preSubmitCheck.hasErrorFeedback || !preSubmitCheck.ariaInvalid) {
+      throw new Error('Contact Form validation check failed');
+    }
+
+    // Capture filled Contact Form screenshot (before clicking submit)
+    const filledContactShot = await send('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.resolve(__dirname, 'screenshot-contact-filled.png'), Buffer.from(filledContactShot.data, 'base64'));
+    console.log('[PASS] Filled Contact section screenshot saved: screenshot-contact-filled.png');
+
+    // Submit form and verify dispatch + emerald confirmation state
+    const submitTestRes = await send('Runtime.evaluate', {
+      awaitPromise: true,
+      expression: `(async () => {
+        const submitBtn = document.querySelector('#contact form button[type="submit"]');
         let dispatchedUrl = null;
         let dispatchedPayload = null;
         const origFetch = window.fetch;
@@ -345,16 +369,15 @@ server.listen(PORT, '127.0.0.1', async () => {
           try {
             dispatchedPayload = JSON.parse(opts?.body || '{}');
           } catch {}
-          // Return immediate mock response during automated test suite so CI doesn't spam inbox on every run
           return new Response(JSON.stringify({ success: 'true', message: 'The form was submitted successfully.' }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
           });
         };
 
-        setNativeValue(emailInput, 'recruiter@company.com');
-        await new Promise(r => setTimeout(r, 150));
+        const t0 = performance.now();
         submitBtn.click();
+        const clickLatencyMs = Math.round(performance.now() - t0);
         await new Promise(r => setTimeout(r, 400));
         window.fetch = origFetch;
 
@@ -362,26 +385,24 @@ server.listen(PORT, '127.0.0.1', async () => {
         const sentSuccess = !!statusEl && statusEl.textContent.toLowerCase().includes('message sent');
 
         return JSON.stringify({
-          success: true,
-          hasErrorFeedback: hasEmailError,
-          ariaInvalid,
           dispatchedUrl,
           dispatchedToOwner: dispatchedUrl === 'https://formsubmit.co/ajax/iannnubb@gmail.com',
           payloadName: dispatchedPayload?.name,
           sentSuccess,
+          clickLatencyMs,
           statusText: statusEl?.textContent || ''
         });
       })()`,
     });
-    const formCheck = JSON.parse(formTestRes.result.value);
-    console.log('[CHECK] Contact Form validation & submission result:', formCheck);
-    if (!formCheck.success || !formCheck.hasErrorFeedback || !formCheck.ariaInvalid || !formCheck.dispatchedToOwner || !formCheck.sentSuccess) {
-      throw new Error('Contact Form validation or delivery check failed');
+    const formCheck = JSON.parse(submitTestRes.result.value);
+    console.log('[CHECK] Contact Form submission & INP latency:', formCheck);
+    if (!formCheck.dispatchedToOwner || !formCheck.sentSuccess) {
+      throw new Error('Contact Form delivery check failed');
     }
 
     const contactShot = await send('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.resolve(__dirname, 'screenshot-contact.png'), Buffer.from(contactShot.data, 'base64'));
-    console.log('[PASS] Contact section screenshot saved: screenshot-contact.png');
+    console.log('[PASS] Contact section confirmation screenshot saved: screenshot-contact.png');
 
     // Test 2B: Project Gallery Modal & Category Filtering
     console.log('\n--- Test 2B: Project Gallery Lightbox & Filter Tabs ---');
