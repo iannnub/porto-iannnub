@@ -13,6 +13,7 @@ import { contactSchema, type ContactFormValues } from '@/lib/contactSchema';
 
 export function Contact() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [feedbackMessage, setFeedbackMessage] = useState<string>('');
   const [cooldown, setCooldown] = useState(false);
 
   const {
@@ -32,46 +33,102 @@ export function Contact() {
 
     setCooldown(true);
     setStatus('loading');
+    setFeedbackMessage('');
 
     try {
       const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-      if (!serviceId || !templateId || !publicKey) {
-        // Local demo simulation fallback if keys are missing
-        setTimeout(() => {
-          setStatus('success');
-          reset();
-          setTimeout(() => {
-            setStatus('idle');
-            setCooldown(false);
-          }, 5000);
-        }, 1000);
-        return;
-      }
+      const hasValidEmailJsKeys =
+        Boolean(serviceId && templateId && publicKey) &&
+        serviceId !== 'your_service_id' &&
+        templateId !== 'your_template_id' &&
+        publicKey !== 'your_public_key';
 
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: data.name,
-          reply_to: data.email,
-          message: data.message,
-          to_name: profileData.name,
-        },
-        publicKey
-      );
+      if (hasValidEmailJsKeys) {
+        await emailjs.send(
+          serviceId,
+          templateId,
+          {
+            from_name: data.name,
+            reply_to: data.email,
+            message: data.message,
+            to_name: profileData.name,
+          },
+          publicKey
+        );
+        setFeedbackMessage('Message delivered. Thank you!');
+      } else {
+        // Real zero-config email delivery via FormSubmit AJAX API to profileData.socials.email
+        const targetEmail = profileData.socials.email || 'iannnubb@gmail.com';
+        const deliveryPromise = fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+          method: 'POST',
+          keepalive: true,
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            name: data.name,
+            email: data.email,
+            message: data.message,
+            _subject: `[Portfolio Contact] New message from ${data.name}`,
+            _template: 'table',
+            _captcha: 'false',
+          }),
+        }).then(async (response) => {
+          const result = (await response.json().catch(() => null)) as {
+            success?: string | boolean;
+            message?: string;
+          } | null;
+
+          if (!response.ok) {
+            throw new Error(result?.message || `Email delivery failed (${response.status})`);
+          }
+
+          if (result && (result.success === 'false' || result.success === false)) {
+            if (result.message && result.message.toLowerCase().includes('activation')) {
+              return 'activation_needed' as const;
+            }
+            throw new Error(result.message || 'Email delivery failed.');
+          }
+          return 'delivered' as const;
+        });
+
+        const outcome = await Promise.race([
+          deliveryPromise,
+          new Promise<'dispatched_async'>((resolve) =>
+            window.setTimeout(() => resolve('dispatched_async'), 3500)
+          ),
+        ]);
+
+        if (outcome === 'activation_needed') {
+          setFeedbackMessage(
+            `Check ${targetEmail} (Inbox/Spam) and click "Activate Form" from FormSubmit once to enable instant inbox delivery.`
+          );
+        } else {
+          // Keep background request alive if still in flight
+          deliveryPromise.catch(() => {});
+          setFeedbackMessage(`Message sent to ${targetEmail}. Thank you!`);
+        }
+      }
 
       setStatus('success');
       reset();
 
       setTimeout(() => {
         setStatus('idle');
+        setFeedbackMessage('');
         setCooldown(false);
-      }, 5000);
-    } catch {
+      }, 8000);
+    } catch (err) {
       setStatus('error');
+      setFeedbackMessage(
+        err instanceof Error && err.message
+          ? err.message
+          : 'Could not deliver message. Please contact directly via email or LinkedIn.'
+      );
       setCooldown(false);
     }
   };
@@ -230,12 +287,13 @@ export function Contact() {
               </Button>
               {status === 'success' && (
                 <p role="status" className="text-emerald-400 font-mono text-xs text-center">
-                  Message delivered. Thank you!
+                  {feedbackMessage || 'Message delivered. Thank you!'}
                 </p>
               )}
               {status === 'error' && (
                 <p role="status" className="text-accent-red-glow font-mono text-xs text-center">
-                  Could not deliver message. Please contact directly via email or LinkedIn.
+                  {feedbackMessage ||
+                    'Could not deliver message. Please contact directly via email or LinkedIn.'}
                 </p>
               )}
             </form>

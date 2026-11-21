@@ -336,23 +336,47 @@ server.listen(PORT, '127.0.0.1', async () => {
         const hasEmailError = !!emailErrEl && emailErrEl.textContent.toLowerCase().includes('invalid');
         const ariaInvalid = emailInput.getAttribute('aria-invalid') === 'true';
 
-        // 2. Fix email and verify valid submission
+        // 2. Fix email and verify real submission dispatch to FormSubmit / EmailJS
+        let dispatchedUrl = null;
+        let dispatchedPayload = null;
+        const origFetch = window.fetch;
+        window.fetch = async (url, opts) => {
+          dispatchedUrl = String(url);
+          try {
+            dispatchedPayload = JSON.parse(opts?.body || '{}');
+          } catch {}
+          // Return immediate mock response during automated test suite so CI doesn't spam inbox on every run
+          return new Response(JSON.stringify({ success: 'true', message: 'The form was submitted successfully.' }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        };
+
         setNativeValue(emailInput, 'recruiter@company.com');
         await new Promise(r => setTimeout(r, 150));
+        submitBtn.click();
+        await new Promise(r => setTimeout(r, 400));
+        window.fetch = origFetch;
+
+        const statusEl = document.querySelector('#contact form [role="status"]');
+        const sentSuccess = !!statusEl && statusEl.textContent.toLowerCase().includes('message sent');
 
         return JSON.stringify({
           success: true,
-          nameVal: nameInput.value,
-          emailVal: emailInput.value,
           hasErrorFeedback: hasEmailError,
-          ariaInvalid
+          ariaInvalid,
+          dispatchedUrl,
+          dispatchedToOwner: dispatchedUrl === 'https://formsubmit.co/ajax/iannnubb@gmail.com',
+          payloadName: dispatchedPayload?.name,
+          sentSuccess,
+          statusText: statusEl?.textContent || ''
         });
       })()`,
     });
     const formCheck = JSON.parse(formTestRes.result.value);
-    console.log('[CHECK] Contact Form validation result:', formCheck);
-    if (!formCheck.success || !formCheck.hasErrorFeedback || !formCheck.ariaInvalid) {
-      throw new Error('Contact Form validation check failed');
+    console.log('[CHECK] Contact Form validation & submission result:', formCheck);
+    if (!formCheck.success || !formCheck.hasErrorFeedback || !formCheck.ariaInvalid || !formCheck.dispatchedToOwner || !formCheck.sentSuccess) {
+      throw new Error('Contact Form validation or delivery check failed');
     }
 
     const contactShot = await send('Page.captureScreenshot', { format: 'png' });
