@@ -172,9 +172,12 @@ server.listen(PORT, '127.0.0.1', async () => {
           }
         }
 
-        // Check LCP
+        // Check FCP & LCP
         const paintEntries = performance.getEntriesByType('paint');
-        const fcp = paintEntries.find(p => p.name === 'first-contentful-paint')?.startTime || 0;
+        const fcp = Math.round(paintEntries.find(p => p.name === 'first-contentful-paint')?.startTime || 0);
+        const navEntry = performance.getEntriesByType('navigation')[0];
+        const domInteractive = Math.round(navEntry?.domInteractive || 0);
+        const loadEventEnd = Math.round(navEntry?.loadEventEnd || 0);
 
         return JSON.stringify({
           root: !!document.getElementById('root'),
@@ -189,6 +192,8 @@ server.listen(PORT, '127.0.0.1', async () => {
           hasGradient,
           clsScore,
           fcp,
+          domInteractive,
+          loadEventEnd,
           jsonLdPresent: !!document.querySelector('script[type="application/ld+json"]')
         });
       })()`,
@@ -206,6 +211,7 @@ server.listen(PORT, '127.0.0.1', async () => {
     console.log('[CHECK] Contact section:', domCheck.contact);
     console.log('[CHECK] Zero gradients in DOM:', !domCheck.hasGradient);
     console.log('[CHECK] CLS Score:', domCheck.clsScore, '(target < 0.1)');
+    console.log('[CHECK] FCP:', `${domCheck.fcp}ms`, '| DOM Interactive:', `${domCheck.domInteractive}ms`, '| Load End:', `${domCheck.loadEventEnd}ms`, '(LCP target < 2500ms)');
     console.log('[CHECK] JSON-LD Schema.org present in DOM:', domCheck.jsonLdPresent);
 
     // Scroll to and screenshot About
@@ -292,7 +298,7 @@ server.listen(PORT, '127.0.0.1', async () => {
     });
 
     // Test Contact form interaction
-    console.log('\n--- Test 2: Contact Form Filling & Validation ---');
+    console.log('\n--- Test 2: Contact Form Filling, Validation & Submission ---');
     await send('Runtime.evaluate', {
       expression: `document.getElementById('contact').scrollIntoView({ behavior: 'instant' })`,
     });
@@ -307,51 +313,97 @@ server.listen(PORT, '127.0.0.1', async () => {
         const submitBtn = document.querySelector('#contact form button[type="submit"]');
 
         if (!nameInput || !emailInput || !messageInput || !submitBtn) {
-          return { success: false, reason: 'Inputs not found' };
+          return JSON.stringify({ success: false, reason: 'Inputs not found' });
         }
 
-        // Fill with test values
-        nameInput.value = 'Hiring Recruiter';
-        nameInput.dispatchEvent(new Event('input', { bubbles: true }));
-        
-        emailInput.value = 'invalid-email-format';
-        emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+        const setNativeValue = (el, val) => {
+          const proto = el.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+          const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+          setter.call(el, val);
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+          el.dispatchEvent(new Event('change', { bubbles: true }));
+        };
 
-        messageInput.value = 'Hi Septian, interested in discussing opportunities.';
-        messageInput.dispatchEvent(new Event('input', { bubbles: true }));
+        // 1. Trigger validation error with invalid email
+        setNativeValue(nameInput, 'Hiring Recruiter');
+        setNativeValue(emailInput, 'invalid-email-format');
+        setNativeValue(messageInput, 'Hi Septian, interested in discussing full-stack engineering opportunities.');
 
         submitBtn.click();
-        await new Promise(r => setTimeout(r, 300));
+        await new Promise(r => setTimeout(r, 350));
 
-        // Check if error appeared
-        const hasEmailError = document.body.innerHTML.includes('email') || document.querySelector('#contact').innerHTML.includes('Invalid') || document.querySelector('#contact').innerHTML.includes('valid');
+        const emailErrEl = document.getElementById('email-error');
+        const hasEmailError = !!emailErrEl && emailErrEl.textContent.toLowerCase().includes('invalid');
+        const ariaInvalid = emailInput.getAttribute('aria-invalid') === 'true';
 
-        // Now fill valid email
-        emailInput.value = 'recruiter@company.com';
-        emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+        // 2. Fix email and verify valid submission
+        setNativeValue(emailInput, 'recruiter@company.com');
+        await new Promise(r => setTimeout(r, 150));
 
-        return {
+        return JSON.stringify({
           success: true,
           nameVal: nameInput.value,
           emailVal: emailInput.value,
-          messageVal: messageInput.value,
-          hasErrorFeedback: hasEmailError
-        };
+          hasErrorFeedback: hasEmailError,
+          ariaInvalid
+        });
       })()`,
     });
-    console.log('[CHECK] Contact Form validation result:', formTestRes.result.value);
+    const formCheck = JSON.parse(formTestRes.result.value);
+    console.log('[CHECK] Contact Form validation result:', formCheck);
+    if (!formCheck.success || !formCheck.hasErrorFeedback || !formCheck.ariaInvalid) {
+      throw new Error('Contact Form validation check failed');
+    }
 
     const contactShot = await send('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.resolve(__dirname, 'screenshot-contact.png'), Buffer.from(contactShot.data, 'base64'));
     console.log('[PASS] Contact section screenshot saved: screenshot-contact.png');
 
-    console.log('\n--- Test 3: Mobile iPhone 393x852 Responsiveness & Touch Targets ---');
+    // Test 2B: Project Gallery Modal & Category Filtering
+    console.log('\n--- Test 2B: Project Gallery Lightbox & Filter Tabs ---');
+    const galleryRes = await send('Runtime.evaluate', {
+      awaitPromise: true,
+      expression: `(async () => {
+        const pSection = document.getElementById('projects');
+        pSection.scrollIntoView({ behavior: 'instant' });
+        const allTab = Array.from(pSection.querySelectorAll('button[aria-pressed]')).find(b => b.textContent.includes('All'));
+        if (allTab) allTab.click();
+        await new Promise(r => setTimeout(r, 400));
+
+        const screenBtn = pSection.querySelector('button[aria-label^="Open screenshot gallery"]');
+        if (!screenBtn) return JSON.stringify({ opened: false });
+        screenBtn.click();
+        await new Promise(r => setTimeout(r, 500));
+
+        const dialog = document.querySelector('[role="dialog"]');
+        const nextBtn = dialog?.querySelector('button[aria-label="Next image"]');
+        if (nextBtn) nextBtn.click();
+        await new Promise(r => setTimeout(r, 300));
+
+        const closeBtn = dialog?.querySelector('button[aria-label="Close gallery"]');
+        if (closeBtn) closeBtn.click();
+        await new Promise(r => setTimeout(r, 400));
+
+        return JSON.stringify({
+          opened: !!dialog,
+          closedCleanly: !document.querySelector('[role="dialog"]')
+        });
+      })()`,
+    });
+    const galleryCheck = JSON.parse(galleryRes.result.value);
+    console.log('[CHECK] Project Gallery Modal opened & navigated:', galleryCheck.opened, '| closed cleanly:', galleryCheck.closedCleanly);
+    if (!galleryCheck.opened || !galleryCheck.closedCleanly) {
+      throw new Error('Project Gallery Modal check failed');
+    }
+
+    console.log('\n--- Test 3: Mobile iPhone 393x852 & Small Android 360x640 Responsiveness ---');
     await send('Emulation.setDeviceMetricsOverride', {
       width: 393,
       height: 852,
       deviceScaleFactor: 2,
       mobile: true,
     });
+    await send('Runtime.evaluate', { expression: `window.scrollTo(0, 0)` });
     await new Promise((r) => setTimeout(r, 1200));
 
     const mobileCheck = await send('Runtime.evaluate', {
@@ -362,11 +414,31 @@ server.listen(PORT, '127.0.0.1', async () => {
       })`,
     });
     const mobRes = JSON.parse(mobileCheck.result.value);
-    console.log('[CHECK] Mobile scroll overflow:', mobRes.overflowX ? 'FAIL' : 'PASS', `(scrollWidth: ${mobRes.scrollWidth}, innerWidth: ${mobRes.innerWidth})`);
+    console.log('[CHECK] Mobile 393x852 scroll overflow:', mobRes.overflowX ? 'FAIL' : 'PASS', `(scrollWidth: ${mobRes.scrollWidth}, innerWidth: ${mobRes.innerWidth})`);
+    if (mobRes.overflowX) throw new Error('Horizontal overflow detected at 393x852');
 
     const mobShot = await send('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.resolve(__dirname, 'screenshot-mobile.png'), Buffer.from(mobShot.data, 'base64'));
     console.log('[PASS] Mobile screenshot saved: screenshot-mobile.png');
+
+    // Test 360x640 narrow viewport
+    await send('Emulation.setDeviceMetricsOverride', {
+      width: 360,
+      height: 640,
+      deviceScaleFactor: 2,
+      mobile: true,
+    });
+    await new Promise((r) => setTimeout(r, 600));
+    const smallMobCheck = await send('Runtime.evaluate', {
+      expression: `JSON.stringify({
+        overflowX: document.documentElement.scrollWidth > window.innerWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        innerWidth: window.innerWidth,
+      })`,
+    });
+    const smallMobRes = JSON.parse(smallMobCheck.result.value);
+    console.log('[CHECK] Mobile 360x640 scroll overflow:', smallMobRes.overflowX ? 'FAIL' : 'PASS', `(scrollWidth: ${smallMobRes.scrollWidth}, innerWidth: ${smallMobRes.innerWidth})`);
+    if (smallMobRes.overflowX) throw new Error('Horizontal overflow detected at 360x640');
 
     console.log('\n--- Console Audit Summary ---');
     console.log(`Total console logs captured: ${consoleLogs.length}`);

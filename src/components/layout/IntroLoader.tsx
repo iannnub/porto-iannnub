@@ -1,39 +1,49 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function IntroLoader() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     const handleStart = () => {
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+      }
       setIsPlaying(true);
 
-      // AUDIO LOGIC
       try {
         const audio = new Audio('/jdm-engine.mp3');
         audio.volume = 1.0;
         audio.play().catch(() => {
-          // Autoplay blocked by browser
+          // Autoplay blocked by browser policy
         });
       } catch {
-        // Ignore
+        // Ignore audio instantiation errors in headless environments
       }
 
-      const timer = setTimeout(() => {
+      timerRef.current = window.setTimeout(() => {
         setIsPlaying(false);
+        timerRef.current = null;
       }, 3500);
-
-      return () => clearTimeout(timer);
     };
 
     window.addEventListener('start-engine', handleStart);
-    return () => window.removeEventListener('start-engine', handleStart);
+    return () => {
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+      }
+      window.removeEventListener('start-engine', handleStart);
+    };
   }, []);
 
   return (
     <AnimatePresence>
       {isPlaying && (
         <motion.div
+          role="status"
+          aria-live="polite"
+          aria-label="Porsche GT3 RS ignition sequence animation"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

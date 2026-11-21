@@ -5,14 +5,16 @@
 
 ## Professional Summary
 - Specializes in full-stack web engineering, transactional backend systems, and applied AI/ML architectures.
-- Core Stack: TypeScript, React 19, Vite, Next.js 15/16, Python, FastAPI, Laravel 11, PHP 8, Tailwind CSS, Supabase PostgreSQL, MySQL, Vector Databases (ChromaDB, SBERT).
-- Digital Business Operations: Founder of Javapedia, managing payment gateway integrations, automated reconciliation, and order operations.
+- Core Stack: TypeScript, React 19, Vite, Next.js 15/16, Python, FastAPI, Laravel 12, PHP 8.2, Tailwind CSS, Supabase PostgreSQL (RLS & Atomic RPC), MySQL, Vector Databases (ChromaDB, SBERT).
+- Digital Business Operations: Founder of Javapedia, managing payment gateway integrations (Midtrans), automated reconciliation, and order operations (~30 orders/day).
 
 ## Work Experience
-- Technical Systems Analyst (Intern) at Wuluhan Community Health Center (Nov 2025 - Jan 2026): Designed SIVO drug inventory system tracking 1,136+ items across 9 clinical units.
-- System Solutions Intern at PT Antosa Architect (Jun 2025 - Aug 2025): Developed PHP management information system with multi-role client and revision workflows.
+- Full-Stack Developer at Freelance (Client Systems) (Apr 2026 - Present): Deliver client web systems end-to-end (KakYo Lesson, Platinum Project, Puput LPG) using Laravel, PHP, Next.js, React, and MySQL/PostgreSQL.
+- Audio Transcription & Alignment Specialist (AI Training) at Alignerr (Jul 2026 - Oct 2026): Word-level audio transcription and millisecond-precision time alignment (Ermis Project) for speech recognition AI models.
+- Technical Systems Analyst (Intern) at Wuluhan Community Health Center (Nov 2025 - Jan 2026): Designed SIVO drug inventory system tracking 1,136+ items across 9 clinical units with monthly LPLPO PDF/Excel reporting.
+- Information Systems Intern at PT Antosa Architect (Jun 2025 - Aug 2025): Developed PHP management information system with multi-role client and revision workflows.
 - Business & Digital Support at Rachmad Handycraft (Dec 2022 - Apr 2025): E-commerce platform development, ads marketing, and workflow efficiency.
-- Founder & Developer at Javapedia (Sep 2020 - Feb 2025): Self-managed digital business, Midtrans payment gateway, automated reconciliation, and team leadership.
+- Founder & Developer at Javapedia (Sep 2020 - Feb 2025): Self-managed digital business (~30 orders/day), Midtrans payment gateway, automated reconciliation, and 6-person team leadership.
 - Mobile Legends Esports Coach at SMPN 2 Balung (May 2023 - Jan 2026): Led team to 1st Place at Kabupaten Jember Championship for 3 consecutive years.
 
 ## Key Projects (15 Production & Academic Systems)
@@ -38,6 +40,8 @@
 - IBM SkillsBuild: Introduction to Large Language Models (Oct 2026, ID: ALM-COURSE_4058915).
 - Dicoding Academy: AWS Cloud Certifications (ID: 07Z676LJJPQR).
 - Google Cloud: Google Cloud Computing & Data Analytic.
+- Puspresma PTMA & UMS: Lomba E-Sport Nasional PTMA 2024 (Dec 2024, ID: 0189/Pusprema PTMA/XII/2024).
+- BAPOMI Jawa Timur: Pekan Olahraga Mahasiswa Provinsi Jawa Timur II (POMPROV JATIM II) E-Sport (Jul 2023, ID: 037/BAPOMI/JTM/VII/2023).
 
 ## Online Presence & Contact
 - Website: https://porto-iannnub.vercel.app/

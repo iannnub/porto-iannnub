@@ -16,8 +16,8 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         'bg-white/[0.06] text-primary border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)]',
       outline:
         'border border-white/15 text-secondary hover:text-white hover:border-white/30 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]',
-      blue: 'bg-accent-blue/15 text-accent-blue border border-accent-blue/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]',
-      red: 'bg-accent-red/15 text-accent-red border border-accent-red/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]',
+      blue: 'bg-accent-blue/15 text-accent-blue-glow border border-accent-blue/35 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]',
+      red: 'bg-accent-red/15 text-accent-red-glow border border-accent-red/35 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]',
     };
 
     return (

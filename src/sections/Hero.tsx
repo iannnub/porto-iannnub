@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/Button';
 import { profileData } from '@/data/profile';
 import { triggerEngineStart } from '@/lib/engineEvents';
 import { openDocumentViewer } from '@/lib/documentEvents';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Gauge } from 'lucide-react';
 
 export function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,36 +27,38 @@ export function Hero() {
       <div className="relative z-10 w-full md:w-1/2 flex flex-col gap-6 mt-12 md:mt-0">
         <div>
           <div className="flex items-center justify-between gap-4 mb-4">
-            <p className="font-mono text-accent-blue">Hello, I am</p>
+            <p className="font-mono text-accent-blue-glow">Hello, I am</p>
             <button
+              type="button"
               onClick={triggerEngineStart}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent-red/50 bg-accent-red/10 text-accent-red text-xs font-mono tracking-wider hover:bg-accent-red hover:text-white transition-all shadow-[0_0_15px_rgba(224,40,46,0.2)] active:scale-95"
-              title="Ignition - Porsche Rev & Sound"
+              className="inline-flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full border border-accent-red/50 bg-accent-red/10 text-accent-red-glow text-xs font-mono tracking-wider hover:bg-accent-red hover:text-white transition-all shadow-[0_0_15px_rgba(224,40,46,0.2)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+              title="Trigger Porsche GT3 RS ignition animation and sound"
+              aria-label="Start engine ignition animation"
             >
-              <span className="w-2 h-2 rounded-full bg-accent-red animate-pulse" />
-              START ENGINE 🏎️
+              <Gauge size={15} aria-hidden="true" />
+              <span>START ENGINE</span>
             </button>
           </div>
           <h1 className="font-display text-5xl md:text-7xl text-white uppercase tracking-wider leading-none break-words">
             {profileData.name}
-            <span className="text-accent-red">.</span>
+            <span className="text-accent-red-glow">.</span>
           </h1>
         </div>
 
         <div className="h-8 md:h-12 overflow-hidden flex items-center">
           <motion.p
             key={roleIndex}
-            initial={{ opacity: 0, y: 10 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="font-mono text-lg md:text-2xl text-accent-red flex items-center"
+            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -10 }}
+            className="font-mono text-lg md:text-2xl text-accent-red-glow flex items-center"
           >
             <span className="mr-2">&gt;</span>
             {profileData.headline[roleIndex]}
             <motion.span
-              animate={{ opacity: [1, 0, 1] }}
+              animate={prefersReducedMotion ? { opacity: 1 } : { opacity: [1, 0, 1] }}
               transition={{ repeat: Infinity, duration: 1 }}
-              className="ml-1 w-2 md:w-3 h-5 md:h-7 bg-accent-red inline-block"
+              className="ml-1 w-2 md:w-3 h-5 md:h-7 bg-accent-red-glow inline-block"
             />
           </motion.p>
         </div>
@@ -66,6 +70,7 @@ export function Hero() {
         <div className="flex flex-wrap gap-3 mt-6">
           <Button
             variant="primary"
+            className="min-h-[44px]"
             onClick={() =>
               document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })
             }
@@ -73,17 +78,26 @@ export function Hero() {
             View Projects
           </Button>
           {profileData.socials.resume && (
-            <Button variant="outline" onClick={() => openDocumentViewer('cv')}>
+            <Button
+              variant="outline"
+              className="min-h-[44px]"
+              onClick={() => openDocumentViewer('cv')}
+            >
               View CV
             </Button>
           )}
           {profileData.socials.portfolioPdf && (
-            <Button variant="outline" onClick={() => openDocumentViewer('portfolio')}>
+            <Button
+              variant="outline"
+              className="min-h-[44px]"
+              onClick={() => openDocumentViewer('portfolio')}
+            >
               Portfolio PDF
             </Button>
           )}
           <Button
             variant="outline"
+            className="min-h-[44px]"
             onClick={() =>
               document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
             }
@@ -99,10 +113,14 @@ export function Hero() {
           {/* Spiderman Animation */}
           <motion.div
             className="absolute top-[-10vh] right-[20%] md:right-[30%] origin-top"
-            animate={{
-              rotate: [-15, 15, -15],
-              y: [0, -20, 0],
-            }}
+            animate={
+              prefersReducedMotion
+                ? { rotate: 0, y: 0 }
+                : {
+                    rotate: [-15, 15, -15],
+                    y: [0, -20, 0],
+                  }
+            }
             transition={{
               rotate: { repeat: Infinity, duration: 4.5, ease: 'easeInOut' },
               y: { repeat: Infinity, duration: 2.25, ease: 'easeInOut' },

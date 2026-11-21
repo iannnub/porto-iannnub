@@ -20,13 +20,13 @@ export function Footer() {
           iannnub<span className="text-accent-red">.</span>
         </a>
 
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
           {profileData.socials.linkedin && (
             <a
               href={profileData.socials.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-secondary hover:text-accent-blue transition-colors flex items-center gap-2 group"
+              className="text-secondary hover:text-accent-blue-glow transition-colors flex items-center gap-2 min-h-[44px] min-w-[44px] justify-center px-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue group"
               aria-label="LinkedIn"
             >
               <FaLinkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -38,7 +38,7 @@ export function Footer() {
               href={profileData.socials.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-secondary hover:text-accent-red transition-colors flex items-center gap-2 group"
+              className="text-secondary hover:text-accent-red-glow transition-colors flex items-center gap-2 min-h-[44px] min-w-[44px] justify-center px-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue group"
               aria-label="GitHub"
             >
               <FaGithub className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -50,7 +50,7 @@ export function Footer() {
               href={profileData.socials.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-secondary hover:text-pink-500 transition-colors flex items-center gap-2 group"
+              className="text-secondary hover:text-pink-400 transition-colors flex items-center gap-2 min-h-[44px] min-w-[44px] justify-center px-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue group"
               aria-label="Instagram"
             >
               <FaInstagram className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -60,7 +60,7 @@ export function Footer() {
           {profileData.socials.email && (
             <a
               href={`mailto:${profileData.socials.email}`}
-              className="text-secondary hover:text-accent-blue transition-colors flex items-center gap-2 group"
+              className="text-secondary hover:text-accent-blue-glow transition-colors flex items-center gap-2 min-h-[44px] min-w-[44px] justify-center px-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue group"
               aria-label="Email"
             >
               <Mail className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -74,8 +74,9 @@ export function Footer() {
         </p>
 
         <button
+          type="button"
           onClick={scrollToTop}
-          className="mt-4 flex flex-col items-center gap-2 text-secondary hover:text-accent-blue transition-colors group"
+          className="mt-4 flex flex-col items-center justify-center gap-2 min-h-[48px] min-w-[48px] px-3 py-1 rounded-xl text-secondary hover:text-accent-blue-glow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue group"
           aria-label="Back to top"
         >
           <div className="w-8 h-8 rounded-full border border-current flex items-center justify-center group-hover:shadow-[0_0_10px_rgba(91,156,255,0.5)] transition-shadow">

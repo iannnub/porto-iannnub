@@ -63,4 +63,55 @@ describe('Public Assets Integrity Check', () => {
       expect(exists, `Essential asset missing: ${asset}`).toBe(true);
     });
   });
+
+  it('SEO, GEO, and Social Preview assets exist and index.html has valid JSON-LD & strict CSP', () => {
+    const seoAssets = ['robots.txt', 'sitemap.xml', 'llms.txt', 'og-image.jpg'];
+    seoAssets.forEach((asset) => {
+      const fullPath = path.join(publicDir, asset);
+      expect(fs.existsSync(fullPath), `SEO asset missing: ${asset}`).toBe(true);
+      expect(fs.statSync(fullPath).size).toBeGreaterThan(0);
+    });
+
+    const indexHtmlPath = path.resolve(__dirname, '../../index.html');
+    const html = fs.readFileSync(indexHtmlPath, 'utf-8');
+    expect(html).toContain('property="og:image"');
+    expect(html).toContain('property="og:image:type" content="image/jpeg"');
+    expect(html).toContain('name="twitter:card" content="summary_large_image"');
+    expect(html).not.toContain("'unsafe-eval'");
+
+    const jsonLdMatch = html.match(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
+    );
+    expect(jsonLdMatch).toBeTruthy();
+    const parsedJsonLd = JSON.parse(jsonLdMatch![1]);
+    expect(parsedJsonLd['@context']).toBe('https://schema.org');
+    expect(Array.isArray(parsedJsonLd['@graph'])).toBe(true);
+  });
+
+  it('WCAG 2.2 AA foreground text tokens meet >= 4.5:1 contrast against dark backgrounds', () => {
+    const hexToLuminance = (hex: string) => {
+      const clean = hex.replace('#', '');
+      const r = parseInt(clean.slice(0, 2), 16) / 255;
+      const g = parseInt(clean.slice(2, 4), 16) / 255;
+      const b = parseInt(clean.slice(4, 6), 16) / 255;
+      const lin = (c: number) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+      return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+    };
+    const contrastRatio = (c1: string, c2: string) => {
+      const l1 = hexToLuminance(c1);
+      const l2 = hexToLuminance(c2);
+      return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+    };
+
+    const fgTokens = ['#F5F5F7', '#A1A1B0', '#FF5C61', '#5B9CFF'];
+    const bgTokens = ['#0A0A0F', '#12121A'];
+
+    for (const fg of fgTokens) {
+      for (const bg of bgTokens) {
+        expect(contrastRatio(fg, bg)).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+    expect(contrastRatio('#FFFFFF', '#E0282E')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#FFFFFF', '#2D6CDF')).toBeGreaterThanOrEqual(4.5);
+  });
 });

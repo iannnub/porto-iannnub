@@ -54,7 +54,7 @@ export function ExperienceLite() {
                       <h3 className="font-display text-2xl tracking-wide text-primary">
                         {exp.title}
                       </h3>
-                      <p className="font-sans text-accent-red font-medium">
+                      <p className="font-sans text-accent-red-glow font-medium">
                         {exp.company} • {exp.type}
                       </p>
                       <p className="font-mono text-sm text-secondary">

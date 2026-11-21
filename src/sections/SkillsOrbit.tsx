@@ -3,8 +3,7 @@ import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { skillsData } from '@/data/skills';
 import { Badge } from '@/components/ui/Badge';
-import { motion } from 'framer-motion';
-// SkillsSphere removed due to WebGL context loss issues on some devices
+import { motion, useReducedMotion } from 'framer-motion';
 
 function StaticSkills() {
   return (
@@ -14,7 +13,7 @@ function StaticSkills() {
         const badgeVariant = isFrontend ? 'red' : 'blue';
         return (
           <div key={category.category} className="w-full flex flex-col gap-4 mb-6">
-            <h4 className="font-mono text-accent-red uppercase tracking-widest text-sm">
+            <h4 className="font-mono text-accent-red-glow uppercase tracking-widest text-sm">
               {category.category}
             </h4>
             <div className="flex flex-wrap gap-3">
@@ -89,6 +88,8 @@ function OrbitingSkills() {
 
 export function SkillsOrbit() {
   const tier = useDevicePerformanceTier();
+  const prefersReducedMotion = useReducedMotion();
+  const useStaticView = tier === 'static' || Boolean(prefersReducedMotion);
 
   return (
     <SectionWrapper id="skills" className="overflow-hidden">
@@ -98,11 +99,11 @@ export function SkillsOrbit() {
           <StaticSkills />
         </div>
         <div className="hidden md:flex w-full justify-center items-center">
-          {tier === 'static' ? <StaticSkills /> : <OrbitingSkills />}
+          {useStaticView ? <StaticSkills /> : <OrbitingSkills />}
         </div>
       </div>
 
-      {tier !== 'static' && (
+      {!useStaticView && (
         <div className="mt-8 md:mt-0 text-center">
           <p className="text-secondary font-sans text-sm md:text-base">
             * Displaying top skills per category. Check my resume for the full list.

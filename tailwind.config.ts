@@ -14,6 +14,7 @@ export default {
         primary: 'var(--text-primary)',
         secondary: 'var(--text-secondary)',
         'accent-red': 'var(--accent-red)',
+        'accent-red-glow': 'var(--accent-red-glow)',
         'accent-blue': 'var(--accent-blue)',
         'accent-blue-glow': 'var(--accent-blue-glow)',
         'accent-line': 'var(--accent-line)',

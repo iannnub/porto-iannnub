@@ -93,7 +93,7 @@ export function Contact() {
                 href={profileData.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 text-secondary hover:text-accent-blue transition-all group"
+                className="flex items-center gap-4 text-secondary hover:text-accent-blue-glow transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-xl"
               >
                 <div className="w-12 h-12 rounded-full border border-accent-line flex items-center justify-center group-hover:border-accent-blue group-hover:bg-accent-blue/10 transition-colors">
                   <FaLinkedin className="w-5 h-5" />
@@ -103,7 +103,7 @@ export function Contact() {
             )}
             <a
               href={`mailto:${profileData.socials.email}`}
-              className="flex items-center gap-4 text-secondary hover:text-accent-red transition-all group"
+              className="flex items-center gap-4 text-secondary hover:text-accent-red-glow transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-xl"
             >
               <div className="w-12 h-12 rounded-full border border-accent-line flex items-center justify-center group-hover:border-accent-red group-hover:bg-accent-red/10 transition-colors">
                 <Send className="w-5 h-5" />
@@ -115,7 +115,7 @@ export function Contact() {
 
         <div className="w-full md:w-2/3">
           <Card className="p-8 md:p-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+            <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-8">
               {/* Honeypot field for bot protection */}
               <input
                 type="text"
@@ -133,17 +133,23 @@ export function Contact() {
                     type="text"
                     placeholder=" "
                     maxLength={80}
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={errors.name ? 'name-error' : undefined}
                     {...register('name')}
-                    className="block py-3 px-0 w-full text-lg text-primary bg-transparent border-0 border-b-2 border-accent-line appearance-none focus:outline-none focus:ring-0 focus:border-accent-blue peer font-sans transition-colors"
+                    className="block py-3 px-0 w-full text-lg text-primary bg-transparent border-0 border-b-2 border-accent-line appearance-none focus:outline-none focus:ring-0 focus:border-accent-blue-glow peer font-sans transition-colors"
                   />
                   <label
                     htmlFor="name"
-                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
+                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue-glow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
                   >
                     Name
                   </label>
                   {errors.name && (
-                    <span className="text-accent-red text-xs absolute -bottom-5">
+                    <span
+                      id="name-error"
+                      role="alert"
+                      className="text-accent-red-glow text-xs absolute -bottom-5"
+                    >
                       {errors.name.message}
                     </span>
                   )}
@@ -155,17 +161,23 @@ export function Contact() {
                     type="email"
                     placeholder=" "
                     maxLength={120}
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={errors.email ? 'email-error' : undefined}
                     {...register('email')}
-                    className="block py-3 px-0 w-full text-lg text-primary bg-transparent border-0 border-b-2 border-accent-line appearance-none focus:outline-none focus:ring-0 focus:border-accent-blue peer font-sans transition-colors"
+                    className="block py-3 px-0 w-full text-lg text-primary bg-transparent border-0 border-b-2 border-accent-line appearance-none focus:outline-none focus:ring-0 focus:border-accent-blue-glow peer font-sans transition-colors"
                   />
                   <label
                     htmlFor="email"
-                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
+                    className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue-glow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
                   >
                     Email
                   </label>
                   {errors.email && (
-                    <span className="text-accent-red text-xs absolute -bottom-5">
+                    <span
+                      id="email-error"
+                      role="alert"
+                      className="text-accent-red-glow text-xs absolute -bottom-5"
+                    >
                       {errors.email.message}
                     </span>
                   )}
@@ -177,18 +189,24 @@ export function Contact() {
                   id="message"
                   placeholder=" "
                   maxLength={2000}
+                  aria-invalid={Boolean(errors.message)}
+                  aria-describedby={errors.message ? 'message-error' : undefined}
                   {...register('message')}
                   rows={4}
-                  className="block py-3 px-0 w-full text-lg text-primary bg-transparent border-0 border-b-2 border-accent-line appearance-none focus:outline-none focus:ring-0 focus:border-accent-blue peer font-sans transition-colors resize-none"
+                  className="block py-3 px-0 w-full text-lg text-primary bg-transparent border-0 border-b-2 border-accent-line appearance-none focus:outline-none focus:ring-0 focus:border-accent-blue-glow peer font-sans transition-colors resize-none"
                 />
                 <label
                   htmlFor="message"
-                  className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
+                  className="absolute text-secondary duration-300 transform -translate-y-6 scale-75 top-3 pointer-events-none origin-[0] peer-focus:left-0 peer-focus:text-accent-blue-glow peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 font-sans text-lg"
                 >
                   Message
                 </label>
                 {errors.message && (
-                  <span className="text-accent-red text-xs absolute -bottom-5">
+                  <span
+                    id="message-error"
+                    role="alert"
+                    className="text-accent-red-glow text-xs absolute -bottom-5"
+                  >
                     {errors.message.message}
                   </span>
                 )}
@@ -216,7 +234,7 @@ export function Contact() {
                 </p>
               )}
               {status === 'error' && (
-                <p role="status" className="text-accent-red font-mono text-xs text-center">
+                <p role="status" className="text-accent-red-glow font-mono text-xs text-center">
                   Could not deliver message. Please contact directly via email or LinkedIn.
                 </p>
               )}

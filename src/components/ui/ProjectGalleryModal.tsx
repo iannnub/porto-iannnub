@@ -149,8 +149,9 @@ export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectG
                 {images.map((_, idx) => (
                   <button
                     key={idx}
+                    type="button"
                     onClick={() => setCurrentIndex(idx)}
-                    className="min-w-[28px] min-h-[28px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-full"
+                    className="min-w-[36px] min-h-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-full"
                     aria-label={`Go to image ${idx + 1}`}
                   >
                     <span

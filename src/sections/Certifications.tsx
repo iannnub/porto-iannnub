@@ -33,6 +33,8 @@ export function Certifications() {
                   <img
                     src={cert.image}
                     alt={cert.title}
+                    width={400}
+                    height={160}
                     loading="lazy"
                     decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -42,7 +44,7 @@ export function Certifications() {
                 <div className="w-full h-40 bg-elevated-2 border-b border-accent-line flex flex-col items-center justify-center relative p-4 text-center">
                   <Award
                     size={36}
-                    className="text-accent-blue mb-2 group-hover:scale-110 group-hover:text-accent-red transition-all duration-300"
+                    className="text-accent-blue-glow mb-2 group-hover:scale-110 group-hover:text-accent-red-glow transition-all duration-300"
                   />
                   <span className="font-mono text-xs uppercase tracking-wider text-secondary">
                     {cert.issuer}
@@ -51,7 +53,9 @@ export function Certifications() {
               )}
 
               <div className="p-6 flex flex-col flex-1">
-                <p className="font-sans text-accent-blue mb-1 text-sm font-medium">{cert.issuer}</p>
+                <p className="font-sans text-accent-blue-glow mb-1 text-sm font-medium">
+                  {cert.issuer}
+                </p>
                 <h3 className="font-sans font-bold text-lg text-white mb-4 flex-1">{cert.title}</h3>
 
                 <div className="flex items-center justify-between pt-4 border-t border-accent-line">
@@ -61,9 +65,9 @@ export function Certifications() {
                       href={cert.file}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-mono text-xs text-accent-blue hover:text-white flex items-center gap-1 transition-colors"
+                      className="font-mono text-xs text-accent-blue-glow hover:text-white inline-flex items-center gap-1 min-h-[36px] px-2 py-1 -mr-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
                     >
-                      View Certificate <ExternalLink size={12} />
+                      View Certificate <ExternalLink size={12} aria-hidden="true" />
                     </a>
                   ) : cert.credentialId ? (
                     <span className="font-mono text-xs text-secondary">

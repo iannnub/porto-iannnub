@@ -100,7 +100,7 @@ export function ExperienceFull({ data = experienceData }: { data?: Experience[] 
                       {exp.title}
                     </h3>
                     <p
-                      className={`font-sans font-medium text-lg ${isLatest ? 'text-accent-red' : 'text-accent-blue'}`}
+                      className={`font-sans font-medium text-lg ${isLatest ? 'text-accent-red-glow' : 'text-accent-blue-glow'}`}
                     >
                       {exp.company} • {exp.type}
                     </p>

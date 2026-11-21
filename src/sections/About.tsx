@@ -34,11 +34,11 @@ export function About() {
               </div>
               {profileData.socials.resume && (
                 <div className="flex flex-wrap items-center gap-3">
-                  <FileText size={18} className="text-accent-red shrink-0" />
+                  <FileText size={18} className="text-accent-red-glow shrink-0" />
                   <button
                     type="button"
                     onClick={() => openDocumentViewer('cv')}
-                    className="hover:text-accent-blue transition-colors underline-offset-4 hover:underline text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded"
+                    className="min-h-[44px] inline-flex items-center hover:text-accent-blue-glow transition-colors underline-offset-4 hover:underline text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded px-1"
                   >
                     Preview CV (PDF)
                   </button>
@@ -46,20 +46,20 @@ export function About() {
                     href={profileData.socials.resume}
                     download="SeptianPutraRachmanHakim_CV_Academy.pdf"
                     aria-label="Download CV PDF"
-                    className="inline-flex items-center gap-1 font-mono text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-secondary hover:text-white hover:border-accent-blue/50 transition-colors"
+                    className="inline-flex items-center gap-1.5 font-mono text-xs px-3.5 py-2 min-h-[44px] rounded-full bg-white/5 border border-white/15 text-secondary hover:text-white hover:border-accent-blue/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
                   >
-                    <Download size={12} />
+                    <Download size={13} />
                     <span>Save</span>
                   </a>
                 </div>
               )}
               {profileData.socials.portfolioPdf && (
                 <div className="flex flex-wrap items-center gap-3">
-                  <FolderOpen size={18} className="text-accent-red shrink-0" />
+                  <FolderOpen size={18} className="text-accent-red-glow shrink-0" />
                   <button
                     type="button"
                     onClick={() => openDocumentViewer('portfolio')}
-                    className="hover:text-accent-blue transition-colors underline-offset-4 hover:underline text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded"
+                    className="min-h-[44px] inline-flex items-center hover:text-accent-blue-glow transition-colors underline-offset-4 hover:underline text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded px-1"
                   >
                     Preview Portfolio Deck (PDF)
                   </button>
@@ -67,9 +67,9 @@ export function About() {
                     href={profileData.socials.portfolioPdf}
                     download="SeptianPutraRachmanHakim_Portfolio_Academy.pdf"
                     aria-label="Download Portfolio Deck PDF"
-                    className="inline-flex items-center gap-1 font-mono text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-secondary hover:text-white hover:border-accent-blue/50 transition-colors"
+                    className="inline-flex items-center gap-1.5 font-mono text-xs px-3.5 py-2 min-h-[44px] rounded-full bg-white/5 border border-white/15 text-secondary hover:text-white hover:border-accent-blue/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
                   >
-                    <Download size={12} />
+                    <Download size={13} />
                     <span>Save</span>
                   </a>
                 </div>
@@ -86,7 +86,7 @@ export function About() {
               className="flex items-center gap-6 p-6 md:p-8 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-accent-blue/40 hover:bg-white/10 transition-all group shadow-lg"
             >
               <div className="flex-1">
-                <p className="font-mono text-xs md:text-sm uppercase tracking-widest text-accent-red mb-2">
+                <p className="font-mono text-xs md:text-sm uppercase tracking-widest text-accent-red-glow mb-2">
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </p>
                 <p className="font-display text-2xl md:text-4xl text-white group-hover:text-accent-blue transition-colors drop-shadow-[0_0_10px_rgba(45,108,223,0.3)]">
