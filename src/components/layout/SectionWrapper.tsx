@@ -1,34 +1,30 @@
-import { forwardRef } from 'react';
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import { forwardRef, type HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
-export interface SectionWrapperProps extends HTMLMotionProps<'section'> {
+export interface SectionWrapperProps extends HTMLAttributes<HTMLElement> {
   id: string;
 }
 
 /**
- * A wrapper for all main page sections ensuring consistent spacing and max-width.
+ * A wrapper for all main page sections ensuring consistent spacing, max-width, and content-visibility isolation.
  */
 export const SectionWrapper = forwardRef<HTMLElement, SectionWrapperProps>(
   ({ id, className, children, ...props }, ref) => {
     const isHero = id === 'hero';
 
     return (
-      <motion.section
+      <section
         id={id}
         ref={ref}
-        initial={isHero ? false : { opacity: 0, y: 24 }}
-        whileInView={isHero ? undefined : { opacity: 1, y: 0 }}
-        viewport={isHero ? undefined : { once: true, margin: '-100px' }}
-        transition={isHero ? undefined : { duration: 0.6, ease: 'easeOut' }}
         className={cn(
-          'w-full max-w-6xl mx-auto px-6 md:px-12 py-24 md:py-32 relative z-10',
+          'w-full max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-28 relative z-10',
+          !isHero && 'cv-auto',
           className
         )}
         {...props}
       >
         {children}
-      </motion.section>
+      </section>
     );
   }
 );

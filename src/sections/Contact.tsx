@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import emailjs from '@emailjs/browser';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Card } from '@/components/ui/Card';
@@ -47,6 +46,7 @@ export function Contact() {
         publicKey !== 'your_public_key';
 
       if (hasValidEmailJsKeys) {
+        const { default: emailjs } = await import('@emailjs/browser');
         await emailjs.send(
           serviceId,
           templateId,
@@ -150,7 +150,7 @@ export function Contact() {
                 href={profileData.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 text-secondary hover:text-accent-blue-glow transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-xl"
+                className="flex items-center gap-4 text-secondary hover:text-accent-blue-glow transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-xl"
               >
                 <div className="w-12 h-12 rounded-full border border-accent-line flex items-center justify-center group-hover:border-accent-blue group-hover:bg-accent-blue/10 transition-colors">
                   <FaLinkedin className="w-5 h-5" />
@@ -160,7 +160,7 @@ export function Contact() {
             )}
             <a
               href={`mailto:${profileData.socials.email}`}
-              className="flex items-center gap-4 text-secondary hover:text-accent-red-glow transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-xl"
+              className="flex items-center gap-4 text-secondary hover:text-accent-red-glow transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-xl"
             >
               <div className="w-12 h-12 rounded-full border border-accent-line flex items-center justify-center group-hover:border-accent-red group-hover:bg-accent-red/10 transition-colors">
                 <Send className="w-5 h-5" />
@@ -171,7 +171,7 @@ export function Contact() {
         </div>
 
         <div className="w-full md:w-2/3">
-          <Card className="p-6 sm:p-8 md:p-10 bg-[#12121A]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
+          <Card className="p-6 sm:p-8 md:p-10 bg-[#12121A] border border-white/10 rounded-2xl shadow-2xl">
             <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
               {/* Honeypot field for bot protection */}
               <input

@@ -1,9 +1,9 @@
+import { useState, useEffect, useRef } from 'react';
 import { useDevicePerformanceTier } from '@/hooks/useDevicePerformanceTier';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { skillsData } from '@/data/skills';
 import { Badge } from '@/components/ui/Badge';
-import { motion, useReducedMotion } from 'framer-motion';
 
 function StaticSkills() {
   return (
@@ -13,9 +13,9 @@ function StaticSkills() {
         const badgeVariant = isFrontend ? 'red' : 'blue';
         return (
           <div key={category.category} className="w-full flex flex-col gap-4 mb-6">
-            <h4 className="font-mono text-accent-red-glow uppercase tracking-widest text-sm">
+            <h3 className="font-mono text-accent-red-glow uppercase tracking-widest text-sm">
               {category.category}
-            </h4>
+            </h3>
             <div className="flex flex-wrap gap-3">
               {category.skills.map((skill) => (
                 <Badge
@@ -35,8 +35,30 @@ function StaticSkills() {
 }
 
 function OrbitingSkills() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        setIsVisible(entries[0]?.isIntersecting ?? true);
+      },
+      { rootMargin: '150px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const playState = isVisible ? 'running' : 'paused';
+
   return (
-    <div className="w-full h-[350px] md:h-[700px] flex items-center justify-center overflow-hidden">
+    <div
+      ref={containerRef}
+      className="w-full h-[350px] md:h-[700px] flex items-center justify-center overflow-hidden"
+    >
       <div className="relative w-[700px] h-[700px] flex-shrink-0 flex items-center justify-center scale-[0.5] sm:scale-[0.7] md:scale-100 origin-center">
         <div className="absolute w-24 h-24 bg-elevated-2 border-2 border-accent-red rounded-full z-10 flex items-center justify-center shadow-[0_0_30px_rgba(224,40,46,0.3)]">
           <span className="font-display text-primary">Core</span>
@@ -48,12 +70,17 @@ function OrbitingSkills() {
           const reverse = i % 2 !== 0;
 
           return (
-            <motion.div
+            <div
               key={category.category}
+              data-anim="orbit"
               className="absolute rounded-full border border-accent-line/30"
-              style={{ width: radius * 2, height: radius * 2 }}
-              animate={{ rotate: reverse ? -360 : 360 }}
-              transition={{ duration, repeat: Infinity, ease: 'linear' }}
+              style={{
+                width: radius * 2,
+                height: radius * 2,
+                animation: `${reverse ? 'orbit-ccw' : 'orbit-cw'} ${duration}s linear infinite`,
+                animationPlayState: playState,
+                willChange: 'transform',
+              }}
             >
               {category.skills.slice(0, 6).map((skill, j) => {
                 const numSkills = Math.min(6, category.skills.length);
@@ -62,23 +89,32 @@ function OrbitingSkills() {
                 const y = Math.sin(angle) * radius;
 
                 return (
-                  <motion.div
+                  <div
                     key={skill}
-                    className="absolute left-1/2 top-1/2 origin-center"
-                    style={{ x: `calc(-50% + ${x}px)`, y: `calc(-50% + ${y}px)` }}
-                    animate={{ rotate: reverse ? 360 : -360 }}
-                    transition={{ duration, repeat: Infinity, ease: 'linear' }}
+                    className="absolute left-1/2 top-1/2"
+                    style={{
+                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                    }}
                   >
-                    <Badge
-                      variant="blue"
-                      className="shadow-lg whitespace-nowrap text-xs md:text-sm"
+                    <div
+                      data-anim="orbit"
+                      style={{
+                        animation: `${reverse ? 'orbit-cw' : 'orbit-ccw'} ${duration}s linear infinite`,
+                        animationPlayState: playState,
+                        willChange: 'transform',
+                      }}
                     >
-                      {skill}
-                    </Badge>
-                  </motion.div>
+                      <Badge
+                        variant="blue"
+                        className="shadow-lg whitespace-nowrap text-xs md:text-sm"
+                      >
+                        {skill}
+                      </Badge>
+                    </div>
+                  </div>
                 );
               })}
-            </motion.div>
+            </div>
           );
         })}
       </div>
@@ -88,22 +124,30 @@ function OrbitingSkills() {
 
 export function SkillsOrbit() {
   const tier = useDevicePerformanceTier();
-  const prefersReducedMotion = useReducedMotion();
-  const useStaticView = tier === 'static' || Boolean(prefersReducedMotion);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(min-width: 768px)').matches : false
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(min-width: 768px)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsDesktop(e.matches);
+    };
+    mq.addEventListener('change', handleChange);
+    return () => mq.removeEventListener('change', handleChange);
+  }, []);
+
+  const showOrbit = isDesktop && tier === 'full';
 
   return (
     <SectionWrapper id="skills" className="overflow-hidden">
       <SectionHeading title="Skills" subtitle="My technical toolkit" />
-      <div className="mt-12 w-full flex justify-center items-center min-h-[400px]">
-        <div className="md:hidden w-full flex justify-center">
-          <StaticSkills />
-        </div>
-        <div className="hidden md:flex w-full justify-center items-center">
-          {useStaticView ? <StaticSkills /> : <OrbitingSkills />}
-        </div>
+      <div className="mt-12 w-full flex justify-center items-center min-h-[320px]">
+        {showOrbit ? <OrbitingSkills /> : <StaticSkills />}
       </div>
 
-      {!useStaticView && (
+      {showOrbit && (
         <div className="mt-8 md:mt-0 text-center">
           <p className="text-secondary font-sans text-sm md:text-base">
             * Displaying top skills per category. Check my resume for the full list.

@@ -1,6 +1,6 @@
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useState } from 'react';
+import { useState, useEffect, type MutableRefObject } from 'react';
 
 const baseBoxGeo = new THREE.BoxGeometry(1, 1, 1);
 const edgesGeo = new THREE.EdgesGeometry(baseBoxGeo);
@@ -16,10 +16,10 @@ function CitySilhouettes() {
     const list = [];
     for (let i = 0; i < 30; i++) {
       const z = -(i * 3) - 5;
-      const x = (i % 2 === 0 ? 1 : -1) * (3 + Math.random() * 5);
-      const w = 1 + Math.random() * 2;
-      const h = 2 + Math.random() * 15;
-      const d = 1 + Math.random() * 2;
+      const x = (i % 2 === 0 ? 1 : -1) * (3 + ((i * 37) % 100) * 0.05);
+      const w = 1 + ((i * 19) % 100) * 0.02;
+      const h = 2 + ((i * 53) % 100) * 0.15;
+      const d = 1 + ((i * 29) % 100) * 0.02;
       list.push({
         position: [x, h / 2 - 2, z] as [number, number, number],
         scale: [w, h, d] as [number, number, number],
@@ -50,7 +50,22 @@ const _lerpTarget = new THREE.Vector3();
 const _lookAtTarget = new THREE.Vector3();
 const _dummyObj = new THREE.Object3D();
 
-function PathCamera({ progressRef }: { progressRef: React.MutableRefObject<number> }) {
+function PathCamera({
+  progressRef,
+  subscribeProgress,
+}: {
+  progressRef: MutableRefObject<number>;
+  subscribeProgress: (cb: () => void) => () => void;
+}) {
+  const invalidate = useThree((state) => state.invalidate);
+
+  useEffect(() => {
+    invalidate();
+    return subscribeProgress(() => {
+      invalidate();
+    });
+  }, [subscribeProgress, invalidate]);
+
   useFrame(({ camera }) => {
     const p = progressRef.current;
     const targetZ = p * -100;
@@ -58,7 +73,7 @@ function PathCamera({ progressRef }: { progressRef: React.MutableRefObject<numbe
     const targetY = 2 + Math.sin(p * Math.PI * 2) * 1;
 
     _lerpTarget.set(targetX, targetY, targetZ);
-    camera.position.lerp(_lerpTarget, 0.1);
+    camera.position.lerp(_lerpTarget, 0.15);
 
     const lookAheadZ = targetZ - 10;
     const lookAheadX = Math.sin((p + 0.05) * Math.PI * 4) * 2;
@@ -66,7 +81,12 @@ function PathCamera({ progressRef }: { progressRef: React.MutableRefObject<numbe
     _lookAtTarget.set(lookAheadX, 2, lookAheadZ);
     _dummyObj.position.copy(camera.position);
     _dummyObj.lookAt(_lookAtTarget);
-    camera.quaternion.slerp(_dummyObj.quaternion, 0.1);
+    camera.quaternion.slerp(_dummyObj.quaternion, 0.15);
+
+    // Keep requesting demand frames only until camera converges to scroll target
+    if (camera.position.distanceToSquared(_lerpTarget) > 0.0005) {
+      invalidate();
+    }
   });
 
   return null;
@@ -74,12 +94,16 @@ function PathCamera({ progressRef }: { progressRef: React.MutableRefObject<numbe
 
 export default function ExperienceRoadScene({
   progressRef,
+  subscribeProgress,
 }: {
-  progressRef: React.MutableRefObject<number>;
+  progressRef: MutableRefObject<number>;
+  subscribeProgress: (cb: () => void) => () => void;
 }) {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none">
       <Canvas
+        frameloop="demand"
+        dpr={[1, 1.5]}
         camera={{ position: [0, 2, 0], fov: 60 }}
         gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
       >
@@ -89,7 +113,7 @@ export default function ExperienceRoadScene({
 
         <CitySilhouettes />
 
-        <PathCamera progressRef={progressRef} />
+        <PathCamera progressRef={progressRef} subscribeProgress={subscribeProgress} />
       </Canvas>
     </div>
   );

@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+// Disable JIT code generation (`new Function`) so strict CSP without 'unsafe-eval' produces 0 Chrome issues
+z.config({ jitless: true });
+
 export const contactSchema = z.object({
   name: z.string().trim().min(2, 'Name is too short').max(80, 'Name cannot exceed 80 characters'),
   email: z

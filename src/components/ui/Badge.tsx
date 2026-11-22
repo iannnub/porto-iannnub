@@ -13,18 +13,18 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = 'default', ...props }, ref) => {
     const variants = {
       default:
-        'bg-white/[0.06] text-primary border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)]',
+        'bg-[#1B1B26] text-primary border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]',
       outline:
-        'border border-white/15 text-secondary hover:text-white hover:border-white/30 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]',
-      blue: 'bg-accent-blue/15 text-accent-blue-glow border border-accent-blue/35 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]',
-      red: 'bg-accent-red/15 text-accent-red-glow border border-accent-red/35 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]',
+        'border border-white/15 bg-[#12121A] text-secondary hover:text-white hover:border-white/30 transition-colors shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
+      blue: 'bg-[#172136] text-accent-blue-glow border border-accent-blue/35 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]',
+      red: 'bg-[#2C141A] text-accent-red-glow border border-accent-red/35 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]',
     };
 
     return (
       <span
         ref={ref}
         className={cn(
-          'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold font-sans backdrop-blur-md transition-colors',
+          'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold font-sans transition-colors',
           variants[variant],
           className
         )}

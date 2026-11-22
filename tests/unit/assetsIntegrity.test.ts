@@ -55,13 +55,42 @@ describe('Public Assets Integrity Check', () => {
     }
   });
 
-  it('essential static assets exist (spiderman, engine audio, favicon)', () => {
-    const essentialAssets = ['spiderman.png', 'jdm-engine.mp3', 'favicon.svg'];
+  it('essential static assets exist (spiderman, spiderman webp, engine audio, favicon)', () => {
+    const essentialAssets = ['spiderman.png', 'spiderman.webp', 'jdm-engine.mp3', 'favicon.svg'];
     essentialAssets.forEach((asset) => {
       const fullPath = path.join(publicDir, asset);
       const exists = fs.existsSync(fullPath);
       expect(exists, `Essential asset missing: ${asset}`).toBe(true);
     });
+  });
+
+  it('performance and security guardrails hold across src and vercel.json', () => {
+    const rootDir = path.resolve(__dirname, '../..');
+    const vercelPath = path.join(rootDir, 'vercel.json');
+    expect(fs.existsSync(vercelPath), 'vercel.json missing').toBe(true);
+    const vercelConfig = JSON.parse(fs.readFileSync(vercelPath, 'utf-8'));
+    const headerKeys = vercelConfig.headers
+      .flatMap((rule: { headers: Array<{ key: string }> }) => rule.headers)
+      .map((h: { key: string }) => h.key);
+    expect(headerKeys).toContain('X-Content-Type-Options');
+    expect(headerKeys).toContain('X-Frame-Options');
+    expect(headerKeys).toContain('Referrer-Policy');
+    expect(headerKeys).toContain('Permissions-Policy');
+
+    const srcDir = path.join(rootDir, 'src');
+    const walkTsx = (dir: string): string[] =>
+      fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+        const res = path.join(dir, entry.name);
+        return entry.isDirectory() ? walkTsx(res) : entry.name.endsWith('.tsx') ? [res] : [];
+      });
+
+    for (const file of walkTsx(srcDir)) {
+      const code = fs.readFileSync(file, 'utf-8');
+      expect(code, `Heavy backdrop-blur-2xl/xl found in ${file}`).not.toMatch(
+        /backdrop-blur-(2xl|xl)/
+      );
+      expect(code, `Gradient class found in ${file}`).not.toMatch(/bg-gradient-/);
+    }
   });
 
   it('SEO, GEO, and Social Preview assets exist and index.html has valid JSON-LD & strict CSP', () => {

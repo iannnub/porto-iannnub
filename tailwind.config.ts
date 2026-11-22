@@ -23,7 +23,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        display: ['Anton', 'sans-serif'],
+        display: ['Anton', 'Anton Fallback', 'Impact', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
     },

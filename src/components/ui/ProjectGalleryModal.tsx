@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
@@ -13,6 +12,7 @@ interface ProjectGalleryModalProps {
 export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectGalleryModalProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const touchStartXRef = useRef<number | null>(null);
 
   if (isOpen !== prevIsOpen) {
     setPrevIsOpen(isOpen);
@@ -59,124 +59,111 @@ export function ProjectGalleryModal({ isOpen, onClose, images, title }: ProjectG
 
   const hasMultipleImages = images.length > 1;
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!hasMultipleImages) return;
+    touchStartXRef.current = e.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!hasMultipleImages || touchStartXRef.current === null) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchStartXRef.current;
+    const deltaX = endX - touchStartXRef.current;
+    touchStartXRef.current = null;
+    if (deltaX < -50) goToNext();
+    else if (deltaX > 50) goToPrev();
+  };
+
   const modalContent = (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          role="dialog"
-          aria-modal="true"
-          aria-label={title}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 md:p-8"
-          onClick={onClose}
-        >
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 md:top-8 md:right-8 z-50 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-white/70 hover:text-white bg-black/20 hover:bg-black/50 rounded-full backdrop-blur-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
-            aria-label="Close gallery"
-          >
-            <X size={24} />
-          </button>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 md:p-8 animate-[modal-fade_150ms_ease-out]"
+      onClick={onClose}
+    >
+      {/* Close Button */}
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute top-4 right-4 md:top-8 md:right-8 z-50 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-white/80 hover:text-white bg-[#12121A] hover:bg-[#1E1E2B] border border-white/15 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+        aria-label="Close gallery"
+      >
+        <X size={24} />
+      </button>
 
-          {/* Title (Optional, floating at top) */}
-          <div className="absolute top-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 text-white/90 text-sm font-medium shadow-lg pointer-events-none">
-            {title}
-          </div>
+      {/* Title */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-[#12121A] rounded-full border border-white/15 text-white/90 text-sm font-medium shadow-lg pointer-events-none max-w-[70vw] truncate">
+        {title}
+      </div>
 
-          <div
-            className="relative w-full max-w-6xl aspect-video md:aspect-auto md:h-[85vh] flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={currentIndex}
-                src={images[currentIndex]}
-                alt={`${title} screenshot ${currentIndex + 1}`}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-lg"
-                loading="lazy"
-                decoding="async"
-                drag={hasMultipleImages ? 'x' : false}
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
-                onDragEnd={(_, { offset, velocity }) => {
-                  const swipe = swipePower(offset.x, velocity.x);
-                  if (swipe < -swipeConfidenceThreshold) {
-                    goToNext();
-                  } else if (swipe > swipeConfidenceThreshold) {
-                    goToPrev();
-                  }
-                }}
+      <div
+        className="relative w-full max-w-6xl aspect-video md:aspect-auto md:h-[85vh] flex items-center justify-center animate-[modal-pop_150ms_ease-out]"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <img
+          key={currentIndex}
+          src={images[currentIndex]}
+          alt={`${title} screenshot ${currentIndex + 1}`}
+          className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-lg select-none"
+          decoding="async"
+        />
+
+        {/* Navigation Arrows */}
+        {hasMultipleImages && (
+          <>
+            <button
+              type="button"
+              onClick={goToPrev}
+              className="absolute left-2 md:left-4 p-3 min-w-[48px] min-h-[48px] flex items-center justify-center text-white/80 hover:text-white bg-[#12121A]/90 hover:bg-[#1E1E2B] border border-white/15 rounded-full transition-colors -translate-y-1/2 top-1/2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+              aria-label="Previous image"
+            >
+              <ChevronLeft
+                size={32}
+                className="group-hover:-translate-x-0.5 transition-transform"
               />
-            </AnimatePresence>
+            </button>
+            <button
+              type="button"
+              onClick={goToNext}
+              className="absolute right-2 md:right-4 p-3 min-w-[48px] min-h-[48px] flex items-center justify-center text-white/80 hover:text-white bg-[#12121A]/90 hover:bg-[#1E1E2B] border border-white/15 rounded-full transition-colors -translate-y-1/2 top-1/2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+              aria-label="Next image"
+            >
+              <ChevronRight
+                size={32}
+                className="group-hover:translate-x-0.5 transition-transform"
+              />
+            </button>
+          </>
+        )}
 
-            {/* Navigation Arrows */}
-            {hasMultipleImages && (
-              <>
-                <button
-                  onClick={goToPrev}
-                  className="absolute left-2 md:left-4 p-3 min-w-[48px] min-h-[48px] flex items-center justify-center text-white/50 hover:text-white bg-black/20 hover:bg-black/60 rounded-full backdrop-blur-md transition-all -translate-y-1/2 top-1/2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft
-                    size={32}
-                    className="group-hover:-translate-x-0.5 transition-transform"
-                  />
-                </button>
-                <button
-                  onClick={goToNext}
-                  className="absolute right-2 md:right-4 p-3 min-w-[48px] min-h-[48px] flex items-center justify-center text-white/50 hover:text-white bg-black/20 hover:bg-black/60 rounded-full backdrop-blur-md transition-all -translate-y-1/2 top-1/2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
-                  aria-label="Next image"
-                >
-                  <ChevronRight
-                    size={32}
-                    className="group-hover:translate-x-0.5 transition-transform"
-                  />
-                </button>
-              </>
-            )}
-
-            {/* Indicators */}
-            {hasMultipleImages && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
-                {images.map((_, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setCurrentIndex(idx)}
-                    className="min-w-[36px] min-h-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-full"
-                    aria-label={`Go to image ${idx + 1}`}
-                  >
-                    <span
-                      className={`h-2 rounded-full transition-all duration-300 block ${
-                        idx === currentIndex
-                          ? 'bg-accent-blue w-6 shadow-[0_0_8px_rgba(45,108,223,0.8)]'
-                          : 'bg-white/30 hover:bg-white/60 w-2'
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
+        {/* Indicators */}
+        {hasMultipleImages && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 px-3 py-1 bg-[#12121A] rounded-full border border-white/15">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setCurrentIndex(idx)}
+                className="min-w-[36px] min-h-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue rounded-full"
+                aria-label={`Go to image ${idx + 1}`}
+              >
+                <span
+                  className={`h-2 rounded-full transition-[width,background-color] duration-200 block ${
+                    idx === currentIndex
+                      ? 'bg-accent-blue w-6 shadow-[0_0_8px_rgba(45,108,223,0.8)]'
+                      : 'bg-white/30 hover:bg-white/60 w-2'
+                  }`}
+                />
+              </button>
+            ))}
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+      </div>
+    </div>
   );
 
-  // Render in portal so it sits above all other DOM elements
+  if (typeof document === 'undefined') return null;
   return createPortal(modalContent, document.body);
 }
-
-// Swipe utility functions for framer-motion drag
-const swipeConfidenceThreshold = 10000;
-const swipePower = (offset: number, velocity: number) => {
-  return Math.abs(offset) * velocity;
-};

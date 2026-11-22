@@ -15,7 +15,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-6 md:px-12 py-12 flex flex-col items-center gap-6">
         <a
           href="#"
-          className="font-display text-2xl tracking-wider text-primary transition-all duration-300 hover:text-accent-red hover:drop-shadow-[0_0_8px_rgba(224,40,46,0.8)]"
+          className="font-display text-2xl tracking-wider text-primary transition-colors duration-200 hover:text-accent-red"
         >
           iannnub<span className="text-accent-red">.</span>
         </a>

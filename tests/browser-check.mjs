@@ -19,6 +19,7 @@ const MIME_TYPES = {
   '.json': 'application/json',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.webp': 'image/webp',
   '.svg': 'image/svg+xml',
   '.woff2': 'font/woff2',
   '.woff': 'font/woff',
@@ -441,7 +442,25 @@ server.listen(PORT, '127.0.0.1', async () => {
       throw new Error('Project Gallery Modal check failed');
     }
 
-    console.log('\n--- Test 3: Mobile iPhone 393x852 & Small Android 360x640 Responsiveness ---');
+    console.log('\n--- Test 2C: Start Engine Ignition Overlay ---');
+    await send('Runtime.evaluate', { expression: `window.scrollTo({ top: 0, behavior: 'instant' })` });
+    await new Promise((r) => setTimeout(r, 300));
+    const engineRes = await send('Runtime.evaluate', {
+      awaitPromise: true,
+      expression: `(async () => {
+        const btn = document.querySelector('button[aria-label="Start engine ignition animation"]');
+        if (!btn) return JSON.stringify({ ok: false, reason: 'button missing' });
+        btn.click();
+        await new Promise(r => setTimeout(r, 150));
+        const overlay = document.querySelector('[role="status"][aria-label*="Porsche"]');
+        return JSON.stringify({ ok: !!overlay });
+      })()`,
+    });
+    const engineCheck = JSON.parse(engineRes.result.value);
+    console.log('[CHECK] Start Engine ignition overlay mounted:', engineCheck.ok);
+    if (!engineCheck.ok) throw new Error('Start Engine overlay failed to mount');
+
+    console.log('\n--- Test 3: Mobile iPhone 393x852, Menu Interaction INP & Small Android 360x640 ---');
     await send('Emulation.setDeviceMetricsOverride', {
       width: 393,
       height: 852,
@@ -449,7 +468,44 @@ server.listen(PORT, '127.0.0.1', async () => {
       mobile: true,
     });
     await send('Runtime.evaluate', { expression: `window.scrollTo(0, 0)` });
-    await new Promise((r) => setTimeout(r, 1200));
+    await new Promise((r) => setTimeout(r, 800));
+
+    // Install lightweight event timing observer & test mobile menu open/close with real mouse events
+    await send('Runtime.evaluate', {
+      expression: `(() => {
+        window.__DOM_INP__ = 0;
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.interactionId && entry.duration > window.__DOM_INP__) {
+              window.__DOM_INP__ = entry.duration;
+            }
+          }
+        }).observe({ type: 'event', durationThreshold: 0 });
+      })()`,
+    });
+
+    const toggleBoxRes = await send('Runtime.evaluate', {
+      expression: `(() => {
+        const btn = document.querySelector('button[aria-controls="mobile-navigation"]');
+        if (!btn) return null;
+        const r = btn.getBoundingClientRect();
+        return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+      })()`,
+    });
+    const toggleBox = JSON.parse(toggleBoxRes.result.value);
+    for (const step of ['open', 'close']) {
+      await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: toggleBox.x, y: toggleBox.y, button: 'left', clickCount: 1 });
+      await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: toggleBox.x, y: toggleBox.y, button: 'left', clickCount: 1 });
+      await new Promise((r) => setTimeout(r, 250));
+      if (step === 'open') {
+        const navOpen = await send('Runtime.evaluate', { expression: `!!document.getElementById('mobile-navigation')` });
+        if (!navOpen.result.value) throw new Error('Mobile navigation failed to open');
+      }
+    }
+    const mobInpRes = await send('Runtime.evaluate', { expression: `window.__DOM_INP__` });
+    const mobInp = Number(mobInpRes.result.value || 0);
+    console.log('[CHECK] Mobile menu open/close max INP:', `${mobInp}ms`, '(target < 200ms)');
+    if (mobInp >= 200) throw new Error(`Mobile menu INP too high: ${mobInp}ms`);
 
     const mobileCheck = await send('Runtime.evaluate', {
       expression: `JSON.stringify({

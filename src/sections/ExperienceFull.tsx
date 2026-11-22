@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, Suspense, lazy } from 'react';
+import { useRef, useLayoutEffect, useEffect, useState, useCallback, Suspense, lazy } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Card } from '@/components/ui/Card';
@@ -14,6 +14,34 @@ export function ExperienceFull({ data = experienceData }: { data?: Experience[] 
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
+  const subscribersRef = useRef<Set<() => void>>(new Set());
+  const [shouldMountScene, setShouldMountScene] = useState(false);
+
+  const subscribeProgress = useCallback((cb: () => void) => {
+    subscribersRef.current.add(cb);
+    return () => {
+      subscribersRef.current.delete(cb);
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setShouldMountScene(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '400px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -34,6 +62,7 @@ export function ExperienceFull({ data = experienceData }: { data?: Experience[] 
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             progressRef.current = self.progress;
+            subscribersRef.current.forEach((cb) => cb());
           },
         },
       });
@@ -64,9 +93,13 @@ export function ExperienceFull({ data = experienceData }: { data?: Experience[] 
 
   return (
     <div ref={containerRef} className="h-screen w-full overflow-hidden bg-base relative">
-      <Suspense fallback={<div className="absolute inset-0 z-0 bg-base" />}>
-        <ExperienceRoadScene progressRef={progressRef} />
-      </Suspense>
+      {shouldMountScene ? (
+        <Suspense fallback={<div className="absolute inset-0 z-0 bg-base" />}>
+          <ExperienceRoadScene progressRef={progressRef} subscribeProgress={subscribeProgress} />
+        </Suspense>
+      ) : (
+        <div className="absolute inset-0 z-0 bg-base" />
+      )}
 
       <div
         ref={trackRef}
@@ -92,7 +125,7 @@ export function ExperienceFull({ data = experienceData }: { data?: Experience[] 
                 className={`absolute top-1/2 -left-6 md:-left-12 w-4 h-4 rounded-full shadow-[0_0_15px_rgba(224,40,46,0.5)] -translate-y-1/2 z-20 ${isLatest ? 'bg-accent-red' : 'bg-accent-blue'}`}
               />
               <Card
-                className={`p-8 bg-elevated/80 backdrop-blur-xl border border-white/5 border-l-4 ${borderClass} shadow-2xl relative overflow-hidden group`}
+                className={`p-8 bg-[#12121A]/95 border border-white/10 border-l-4 ${borderClass} shadow-2xl relative overflow-hidden group`}
               >
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4 relative z-10">
                   <div>

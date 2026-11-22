@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export function IntroLoader() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -37,133 +36,108 @@ export function IntroLoader() {
     };
   }, []);
 
+  if (!isPlaying) return null;
+
   return (
-    <AnimatePresence>
-      {isPlaying && (
-        <motion.div
-          role="status"
-          aria-live="polite"
-          aria-label="Porsche GT3 RS ignition sequence animation"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center pointer-events-none overflow-hidden"
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label="Porsche GT3 RS ignition sequence animation"
+      className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center pointer-events-none overflow-hidden animate-[modal-fade_200ms_ease-out]"
+    >
+      <div className="relative w-full max-w-4xl h-64 flex items-center justify-center">
+        {/* Speed lines */}
+        <div className="absolute inset-0 flex items-center">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              data-anim="engine"
+              className="absolute h-1 w-48 bg-accent-blue/60 rounded-full opacity-0"
+              style={{
+                top: `${30 + i * 15}%`,
+                left: '10%',
+                animation: `engine-speedline 0.6s linear ${2.2 + i * 0.05}s forwards`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Porsche GT3 RS SVG */}
+        <div
+          data-anim="engine"
+          className="relative z-10"
+          style={{ animation: 'engine-car 3s ease-in-out forwards' }}
         >
-          <div className="relative w-full max-w-4xl h-64 flex items-center justify-center">
-            {/* Speed lines effect (appears when driving off) */}
-            <motion.div
-              className="absolute inset-0 flex items-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0, 1, 0] }}
-              transition={{ duration: 3.5, times: [0, 0.7, 0.8, 1] }}
-            >
-              {[...Array(5)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute h-1 bg-accent-blue/50 rounded-full"
-                  style={{ top: `${30 + i * 15}%`, left: '10%' }}
-                  initial={{ width: 0, x: 0 }}
-                  animate={{ width: [0, 200, 0], x: [0, 800, 1500] }}
-                  transition={{ duration: 0.6, delay: 2.2 + i * 0.05, ease: 'linear' }}
-                />
-              ))}
-            </motion.div>
+          <div
+            data-anim="engine"
+            className="absolute left-[-20px] bottom-[20px] w-8 h-3 bg-accent-red rounded-full"
+            style={{
+              transformOrigin: '100% 50%',
+              animation: 'engine-flame 3s ease-in-out forwards',
+            }}
+          />
 
-            {/* Porsche GT3 RS SVG & Animation */}
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              animate={{
-                opacity: [0, 1, 1, 1, 0],
-                x: [-100, 0, 0, 1500, 1500],
-                y: [0, 0, -2, 2, -1, 1, 0, 0],
-                rotate: [0, 0, -1, 1, -0.5, 0.5, 0, -5],
+          <svg
+            viewBox="0 0 300 100"
+            className="w-72 md:w-[500px] text-white drop-shadow-[0_0_20px_rgba(224,40,46,0.3)]"
+          >
+            <path
+              d="M30 70 
+                 C 20 70, 10 60, 15 50
+                 C 30 45, 60 40, 80 35
+                 C 120 20, 160 20, 190 35
+                 C 220 40, 260 45, 275 45
+                 C 285 45, 290 55, 290 65
+                 C 290 70, 280 70, 270 70
+                 Z"
+              fill="currentColor"
+            />
+            <path
+              d="M 30 45 L 20 20 L 70 15 L 60 40 Z"
+              fill="#0A0A0F"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+            <path d="M 25 15 L 75 10" stroke="#E0282E" strokeWidth="4" />
+            <path d="M 110 30 C 140 25, 170 25, 185 35 L 185 45 L 100 45 Z" fill="#0A0A0F" />
+            <path d="M 80 60 L 260 60" stroke="#E0282E" strokeWidth="3" opacity="0.8" />
+
+            <g
+              data-anim="engine"
+              style={{
+                transformOrigin: '60px 70px',
+                animation: 'engine-wheel 3s ease-in-out forwards',
               }}
-              transition={{
-                duration: 3,
-                times: [0, 0.3, 0.4, 0.8, 1],
-                y: { duration: 1, delay: 1, repeat: 1, repeatType: 'mirror' }, // Revving vibration
-                rotate: { duration: 1, delay: 1, repeat: 1, repeatType: 'mirror' },
-                ease: 'easeInOut',
+            >
+              <circle cx="60" cy="70" r="18" fill="#0A0A0F" stroke="#E0282E" strokeWidth="4" />
+              <circle cx="60" cy="70" r="6" fill="#2D6CDF" />
+              <line x1="60" y1="52" x2="60" y2="88" stroke="#E0282E" strokeWidth="2" />
+              <line x1="42" y1="70" x2="78" y2="70" stroke="#E0282E" strokeWidth="2" />
+            </g>
+
+            <g
+              data-anim="engine"
+              style={{
+                transformOrigin: '230px 70px',
+                animation: 'engine-wheel 3s ease-in-out forwards',
               }}
-              className="relative z-10"
             >
-              {/* Exhaust flame */}
-              <motion.div
-                className="absolute left-[-20px] bottom-[20px] w-8 h-3 bg-accent-red rounded-full blur-[2px]"
-                initial={{ opacity: 0, scaleX: 0 }}
-                animate={{ opacity: [0, 0, 1, 0], scaleX: [0, 0, 2, 0] }}
-                transition={{ duration: 3, times: [0, 0.4, 0.75, 1] }}
-                style={{ originX: 1 }}
-              />
+              <circle cx="230" cy="70" r="18" fill="#0A0A0F" stroke="#E0282E" strokeWidth="4" />
+              <circle cx="230" cy="70" r="6" fill="#2D6CDF" />
+              <line x1="230" y1="52" x2="230" y2="88" stroke="#E0282E" strokeWidth="2" />
+              <line x1="212" y1="70" x2="248" y2="70" stroke="#E0282E" strokeWidth="2" />
+            </g>
+          </svg>
+        </div>
 
-              <svg
-                viewBox="0 0 300 100"
-                className="w-72 md:w-[500px] text-white drop-shadow-[0_0_20px_rgba(224,40,46,0.3)]"
-              >
-                {/* Car Body */}
-                <path
-                  d="M30 70 
-                         C 20 70, 10 60, 15 50
-                         C 30 45, 60 40, 80 35
-                         C 120 20, 160 20, 190 35
-                         C 220 40, 260 45, 275 45
-                         C 285 45, 290 55, 290 65
-                         C 290 70, 280 70, 270 70
-                         Z"
-                  fill="currentColor"
-                />
-                {/* GT3 Wing */}
-                <path
-                  d="M 30 45 L 20 20 L 70 15 L 60 40 Z"
-                  fill="#0A0A0F"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                />
-                <path d="M 25 15 L 75 10" stroke="#E0282E" strokeWidth="4" />
-                {/* Windows */}
-                <path d="M 110 30 C 140 25, 170 25, 185 35 L 185 45 L 100 45 Z" fill="#0A0A0F" />
-                {/* Red Decal / Line */}
-                <path d="M 80 60 L 260 60" stroke="#E0282E" strokeWidth="3" opacity="0.8" />
-
-                {/* Wheels */}
-                {/* Back Wheel (left) */}
-                <motion.g
-                  animate={{ rotate: [0, 0, 360, 1440] }}
-                  transition={{ duration: 3, times: [0, 0.4, 0.7, 1] }}
-                  style={{ originX: '60px', originY: '70px' }}
-                >
-                  <circle cx="60" cy="70" r="18" fill="#0A0A0F" stroke="#E0282E" strokeWidth="4" />
-                  <circle cx="60" cy="70" r="6" fill="#2D6CDF" />
-                  <line x1="60" y1="52" x2="60" y2="88" stroke="#E0282E" strokeWidth="2" />
-                  <line x1="42" y1="70" x2="78" y2="70" stroke="#E0282E" strokeWidth="2" />
-                </motion.g>
-
-                {/* Front Wheel (right) */}
-                <motion.g
-                  animate={{ rotate: [0, 0, 360, 1440] }}
-                  transition={{ duration: 3, times: [0, 0.4, 0.7, 1] }}
-                  style={{ originX: '230px', originY: '70px' }}
-                >
-                  <circle cx="230" cy="70" r="18" fill="#0A0A0F" stroke="#E0282E" strokeWidth="4" />
-                  <circle cx="230" cy="70" r="6" fill="#2D6CDF" />
-                  <line x1="230" y1="52" x2="230" y2="88" stroke="#E0282E" strokeWidth="2" />
-                  <line x1="212" y1="70" x2="248" y2="70" stroke="#E0282E" strokeWidth="2" />
-                </motion.g>
-              </svg>
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 3, times: [0, 0.2, 0.8, 1] }}
-              className="absolute bottom-10 font-display text-2xl text-accent-red tracking-widest drop-shadow-md"
-            >
-              IGNITION SEQUENCE START...
-            </motion.p>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        <p
+          data-anim="engine"
+          className="absolute bottom-10 font-display text-2xl text-accent-red tracking-widest drop-shadow-md"
+          style={{ animation: 'engine-text 3s ease-in-out forwards' }}
+        >
+          IGNITION SEQUENCE START...
+        </p>
+      </div>
+    </div>
   );
 }
