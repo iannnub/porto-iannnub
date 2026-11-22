@@ -35,6 +35,7 @@
 - Kopi Malas Tanggul: Vue.js local coffee roastery catalog and SME showcase (https://kopi-malas-tanggul.vercel.app/).
 
 ## Verified Credentials
+- Central Course (Kampung Inggris Pare): TOEFL Prediction Test - Score 537 (Listening 57, Structure 52, Reading 52; Nov 2026 - Nov 2028, Reg No: 2611330334).
 - Certified by micro1 (AI Interview): Full-Stack Development & AI/ML Systems (Aug 2026).
 - IBM SkillsBuild: Intelligent by Design: Build an AI Agent (Oct 2026, ID: ALM-COURSE_3946359).
 - IBM SkillsBuild: Introduction to Large Language Models (Oct 2026, ID: ALM-COURSE_4058915).

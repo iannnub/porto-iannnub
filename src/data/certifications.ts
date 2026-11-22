@@ -30,6 +30,17 @@ export const certificationsData: Certification[] = [
     image: '/ibm-llm.jpg',
   },
   {
+    id: 'toefl-central-course',
+    title: 'TOEFL Prediction Test (Score: 537)',
+    issuer: 'Central Course (Kampung Inggris Pare)',
+    date: 'Nov 2026',
+    expiry: 'Nov 2028',
+    credentialId: '2611330334',
+    skills: ['English Proficiency', 'Listening (57)', 'Structure (52)', 'Reading (52)'],
+    file: '/toefl-central-course-2026.pdf',
+    image: '/toefl-central-course-2026.jpg',
+  },
+  {
     id: 'aws-cert',
     title: 'AWS Certifications',
     issuer: 'Dicoding Academy',
