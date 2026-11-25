@@ -54,7 +54,7 @@ export const projectsData: Project[] = [
     company: 'RSU Universitas Muhammadiyah Jember (SKPL Fikes)',
     category: 'Gov & EdTech',
     description:
-      'Perioperative nursing Electronic Medical Record (EHR) platform covering Pre-Op (20 SDKI/SLKI/SIKI diagnoses), Surgical Preparation, WHO Surgical Safety Checklist (Sign In, Time Out, Sign Out), Intra-Op vital-sign SVG trend charts and 5-item instrument counts, Post-Op observation, 12-item permanent handover snapshots, and hospital-headed DomPDF exports. Enforces 5 RBAC roles, sequential 6-stage status gating, optimistic concurrency locking, global Spatie Activitylog auditing, and 86 Pest tests (1,368 assertions).',
+      'Perioperative nursing Electronic Medical Record (EHR) aligned with SKPL Revisi 1, supporting specialty-specific dynamic workflows for Neurosurgery (EDH craniotomy) and Orthopedic Surgery (Femur Fracture ORIF/implants). Covers Pre-Op (20 SDKI/SLKI/SIKI diagnoses, native date/time pickers), Surgical Preparation, WHO Surgical Safety Checklist (Sign In, Time Out, Sign Out), Intra-Op vital-sign SVG trend charts and 5-item instrument counts, Post-Op observation, 12-item permanent handover snapshots, upcoming surgery dashboard schedules, and hospital-headed DomPDF exports. Enforces 5 RBAC roles, sequential 6-stage status gating, optimistic concurrency locking, global Spatie Activitylog auditing, and 95 Pest tests (1,697 assertions).',
     skills: ['Laravel 12', 'Inertia.js', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'MySQL'],
     tags: ['Healthcare System'],
     images: [
